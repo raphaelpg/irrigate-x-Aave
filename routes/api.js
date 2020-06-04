@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const multer = require('multer')
+const mongoose = require('mongoose')
 
 const router = express.Router()
 
@@ -19,14 +20,12 @@ const upload = multer ({ storage: storage }).single('file')
 
 //Routes
 router.get('/api', (req, res) => {
-	IrrigateCause.find({ })
-		.then((data) => {
-			console.log("get data: ", data)
-			res.json(data)
-		})
-		.catch((error) => {
-			console.log(error)
-		})
+	let collection = mongoose.connection.collection('causes')
+
+	collection.find({ }).toArray((err, data) => {
+		if (err) throw err
+		res.json(data)
+	})
 })
 
 router.post('/save', function(req, res) {
@@ -37,11 +36,6 @@ router.post('/save', function(req, res) {
 			return res.status(500).json(err)
 		}
 
-		// const data = req.body
-		// console.log("data: ", data)
-		// const newIrrigateCause = new IrrigateCause(data)
-		// console.log("newIrrigateCause: ", newIrrigateCause)
-
 		const newIrrigateCause = new IrrigateCause({
 			name: req.body.name,
 			description: req.body.description,
@@ -50,9 +44,9 @@ router.post('/save', function(req, res) {
 			country: req.body.country,
 			logoName : req.file.path,
 		})
-		console.log("newIrrigateCause: ", newIrrigateCause)
 
-		newIrrigateCause.save((error) => {
+		let collection = mongoose.connection.collection('causes')
+		collection.insertOne(newIrrigateCause, (error) => {
 			if (error) {
 				res.status(500).json({ msg: 'Internal server error'})
 			}

@@ -94,7 +94,7 @@ class App extends React.Component {
 
     return(
       <div className="app">
-        <h2>Welcome to my App</h2>
+        <h2>Irrigate</h2>
         <form onSubmit={this.submit} >
           <label>Name</label>
           <div className="form-input">
