@@ -10,7 +10,7 @@ class App extends React.Component {
     category: '',
     continent: '',
     country: '',
-    logoName: null,
+    logo: null,
     causes: []
   }
 
@@ -35,33 +35,24 @@ class App extends React.Component {
     this.setState({ [name]: value })
   }
 
-  handleLogoChange(e) {
-    this.setState({ logoName: e.target.files[0] })
+  handleLogoChange = event => {
+    this.setState({
+      logo: event.target.files[0]
+    })
   }
 
   submit = (event) => {
     event.preventDefault()
-    const payload = {
-      name: this.state.name,
-      description: this.state.description,
-      category: this.state.category,
-      continent: this.state.continent,
-      country: this.state.country,
-    }
+    const payload = new FormData()
 
-    payload.append('logoName', this.state.logoName)
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    }
+    payload.append('name', this.state.name)
+    payload.append('description', this.state.description)
+    payload.append('category', this.state.category)
+    payload.append('continent', this.state.continent)
+    payload.append('country', this.state.country)
+    payload.append('file', this.state.logo)
 
-    axios({
-      url: '/save',
-      method: 'POST',
-      data: payload,
-      config
-    })
+    axios.post("/save", payload)
       .then(() => {
         console.log('Data has been sent to the server')
         this.resetUserInputs()
@@ -79,15 +70,15 @@ class App extends React.Component {
       category: '',
       continent: '',
       country: '',
+      logo: null,
     })
   }
 
   displayIrrigateCauses = (causes) => {
     if (!causes) return null
-  
     return causes.map( (cause, index) => (
       <div className="causeDisplay" key={index}>
-        <img src={1} alt={cause.name} />
+        <img src={cause.logoName} alt={cause.name} />
         <h3>{cause.name}</h3>
         <p>{cause.category}</p>
         <p>{cause.continent}</p>
@@ -155,9 +146,8 @@ class App extends React.Component {
           <label>Logo file name</label>
           <div className="form-input">
             <input
-              name="logoName" 
-              type="file" 
-              value={this.state.logoName} 
+              name="file" 
+              type="file"
               onChange={this.handleLogoChange} 
             />
           </div>

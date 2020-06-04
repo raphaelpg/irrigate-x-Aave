@@ -24,6 +24,7 @@ mongoose.connection.on('connected', () => {
 //Data parsing
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use('/ressources', express.static('ressources'))
 
 //Routes logs in console
 app.use(morgan('tiny'))
