@@ -1,0 +1,23 @@
+.app {
+  padding: 10px;
+}
+
+.form-input{
+  margin: 10px 0px;
+}
+
+.irrigateCausesList{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+.causeDisplay{
+  width: 30%;
+  border: 1px solid lightgrey;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 4px;
+}
