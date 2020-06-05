@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Navbar from './components/Navbar'
+import FormAddCause from './components/FormAddCause'
 import './App.css'
 
 class App extends React.Component {
@@ -32,52 +33,6 @@ class App extends React.Component {
       .catch(() => {
         alert('Error retrieving data')
       })
-  }
-
-  handleChange = ({ target }) => {
-    const { name, value } = target
-    this.setState({ [name]: value })
-  }
-
-  handleLogoChange = event => {
-    this.setState({
-      logo: event.target.files[0]
-    })
-  }
-
-  submit = (event) => {
-    event.preventDefault()
-    const payload = new FormData()
-
-    payload.append('name', this.state.name)
-    payload.append('description', this.state.description)
-    payload.append('category', this.state.category)
-    payload.append('continent', this.state.continent)
-    payload.append('country', this.state.country)
-    payload.append('address', this.state.address)
-    payload.append('file', this.state.logo)
-
-    axios.post("/save", payload)
-      .then(() => {
-        console.log('Data has been sent to the server')
-        this.resetUserInputs()
-        this.getIrrigateCauses()
-      })
-      .catch(() => {
-        console.log('Internal server error')
-      })
-  }
-
-  resetUserInputs = () => {
-    this.setState({
-      name: '',
-      description: '',
-      category: '',
-      continent: '',
-      country: '',
-      address: '',
-      logo: null,
-    })
   }
 
   submitUser = (event) => {
@@ -126,74 +81,10 @@ class App extends React.Component {
     return(
       <div className="app">
         <Navbar />
-        <form onSubmit={this.submit} >
-          <label>Name</label>
-          <div className="form-input">
-            <input 
-              name="name" 
-              type="text" 
-              value={this.state.name} 
-              onChange={this.handleChange} 
-            />
-          </div>
-          <label>Description</label>
-          <div className="form-input">
-            <textarea 
-              name="description" 
-              cols="30" 
-              rows="10" 
-              value={this.state.description} 
-              onChange={this.handleChange} 
-            >
-            </textarea>
-          </div>
-          <label>Category</label>
-          <div className="form-input">
-            <input 
-              name="category" 
-              type="text" 
-              value={this.state.category} 
-              onChange={this.handleChange} 
-            />
-          </div>
-          <label>Continent</label>
-          <div className="form-input">
-            <input 
-              name="continent" 
-              type="text" 
-              value={this.state.continent} 
-              onChange={this.handleChange} 
-            />
-          </div>
-          <label>Country</label>
-          <div className="form-input">
-            <input
-              name="country" 
-              type="text" 
-              value={this.state.country} 
-              onChange={this.handleChange} 
-            />
-          </div>
-          <label>Ethereum address</label>
-          <div className="form-input">
-            <input
-              name="address" 
-              type="text" 
-              value={this.state.address} 
-              onChange={this.handleChange} 
-            />
-          </div>
-          <label>Logo file name</label>
-          <div className="form-input">
-            <input
-              name="file" 
-              type="file"
-              onChange={this.handleLogoChange} 
-            />
-          </div>
-          <button>Submit</button>
-        </form>
-
+        {/*<FormAddCause 
+          getIrrigateCauses = {this.getIrrigateCauses}
+        />
+*/}
         <div className="irrigateCausesList">
           {this.displayIrrigateCauses(this.state.causes)}
         </div>
