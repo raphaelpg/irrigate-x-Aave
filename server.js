@@ -7,6 +7,7 @@ require('dotenv').config()
 
 const app = express()
 const routes = require('./routes/api')
+const userRoutes = require('./routes/user')
 
 //Database connection
 const PORT = process.env.PORT || 8080
@@ -14,7 +15,8 @@ const MONGO_URI = process.env.MONGO_URI
 
 mongoose.connect(MONGO_URI, {
 	useNewUrlParser: true,
-	useUnifiedTopology: true
+	useUnifiedTopology: true,
+	useCreateIndex: true
 })
 
 mongoose.connection.on('connected', () => {
@@ -30,7 +32,7 @@ app.use('/ressources', express.static('ressources'))
 app.use(morgan('tiny'))
 //Use router
 app.use('/', routes)
-
+app.use('/user', userRoutes)
 
 //Start server
 app.listen(PORT, console.log(`Server listening on ${PORT}`))

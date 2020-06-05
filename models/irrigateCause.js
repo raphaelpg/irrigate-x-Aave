@@ -8,7 +8,8 @@ const IrrigateCauseSchema = new Schema({
 	category: String,
 	continent: String,
 	country: String,
-	logoName : String,
+	logoName: String,
+	address: String,
 	date: {
 		type: String,
 		default: Date.now()

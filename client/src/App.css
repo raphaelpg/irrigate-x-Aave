@@ -1,5 +1,5 @@
 .app {
-  padding: 10px;
+  padding: 0px;
 }
 
 .form-input{
@@ -20,4 +20,18 @@
   margin: 5px;
   padding: 10px;
   border-radius: 4px;
+}
+.causeLogo{
+  width: 100%;
+}
+
+.Navbar{
+  display: flex;
+  justify-content: space-between;
+  background: #1B510F;
+  color: #FFF7BC;
+}
+.NavbarLeftCorner{
+  display: flex;
+  margin: 0 0 0 10px;
 }

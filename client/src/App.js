@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import Navbar from './components/Navbar'
 import './App.css'
 
 class App extends React.Component {
@@ -10,8 +11,11 @@ class App extends React.Component {
     category: '',
     continent: '',
     country: '',
+    address: '',
     logo: null,
-    causes: []
+    causes: [],
+    email: '',
+    password: ''
   }
 
   componentDidMount = () => {
@@ -50,6 +54,7 @@ class App extends React.Component {
     payload.append('category', this.state.category)
     payload.append('continent', this.state.continent)
     payload.append('country', this.state.country)
+    payload.append('address', this.state.address)
     payload.append('file', this.state.logo)
 
     axios.post("/save", payload)
@@ -70,7 +75,32 @@ class App extends React.Component {
       category: '',
       continent: '',
       country: '',
+      address: '',
       logo: null,
+    })
+  }
+
+  submitUser = (event) => {
+    event.preventDefault()
+    const payload = new FormData()
+
+    payload.append('email', this.state.email)
+    payload.append('password', this.state.password)
+
+    axios.post("/user/signup", payload)
+      .then(() => {
+        console.log('Data has been sent to the server')
+        this.resetSignupInputs()
+      })
+      .catch(() => {
+        console.log('Internal server error')
+      })
+  }
+
+  resetSignupInputs = () => {
+    this.setState({
+      email: '',
+      password: '',
     })
   }
 
@@ -78,12 +108,13 @@ class App extends React.Component {
     if (!causes) return null
     return causes.map( (cause, index) => (
       <div className="causeDisplay" key={index}>
-        <img src={cause.logoName} alt={cause.name} />
+        <img className="causeLogo" src={cause.logoName} alt={cause.name} />
         <h3>{cause.name}</h3>
         <p>{cause.category}</p>
         <p>{cause.continent}</p>
         <p>{cause.country}</p>
         <p>{cause.description}</p>
+        <p>{cause.address}</p>
       </div>
     ))
   }
@@ -94,7 +125,7 @@ class App extends React.Component {
 
     return(
       <div className="app">
-        <h2>Irrigate</h2>
+        <Navbar />
         <form onSubmit={this.submit} >
           <label>Name</label>
           <div className="form-input">
@@ -143,6 +174,15 @@ class App extends React.Component {
               onChange={this.handleChange} 
             />
           </div>
+          <label>Ethereum address</label>
+          <div className="form-input">
+            <input
+              name="address" 
+              type="text" 
+              value={this.state.address} 
+              onChange={this.handleChange} 
+            />
+          </div>
           <label>Logo file name</label>
           <div className="form-input">
             <input
@@ -157,6 +197,28 @@ class App extends React.Component {
         <div className="irrigateCausesList">
           {this.displayIrrigateCauses(this.state.causes)}
         </div>
+
+        <form onSubmit={this.submitUser} >
+          <label>Email</label>
+          <div className="form-input">
+            <input 
+              name="email" 
+              type="text" 
+              value={this.state.email} 
+              onChange={this.handleChange} 
+            />
+          </div>
+          <label>Password</label>
+          <div className="form-input">
+            <input 
+              name="password" 
+              type="text" 
+              value={this.state.password} 
+              onChange={this.handleChange} 
+            />
+          </div>
+          <button>Sign up</button>
+        </form>
       </div>
     )
   }

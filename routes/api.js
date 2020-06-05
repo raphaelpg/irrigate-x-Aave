@@ -22,7 +22,7 @@ const upload = multer ({ storage: storage }).single('file')
 router.get('/api', (req, res) => {
 	let collection = mongoose.connection.collection('causes')
 
-	collection.find({ }).toArray((err, data) => {
+	collection.find({	}).toArray((err, data) => {
 		if (err) throw err
 		res.json(data)
 	})
@@ -42,6 +42,7 @@ router.post('/save', function(req, res) {
 			category: req.body.category,
 			continent: req.body.continent,
 			country: req.body.country,
+			address: req.body.address,
 			logoName : req.file.path,
 		})
 
