@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+const logo = require('./planet.png');
 
 class Navbar extends Component {
 
@@ -6,8 +7,8 @@ class Navbar extends Component {
 		return (
 			<div className="Navbar">
 				<div className="NavbarLeftCorner">
-					<img alt="Irrigate logo"></img>
-	        <h1 className="Title">Irrigate</h1>
+					<img className="NavbarLogo" src={logo} alt="Irrigate logo"></img>
+	        <h1 className="Title">IRRIGATE</h1>
         </div>
         <div className="NavbarRightCorner">
 	        <button className="description">Sign up</button>

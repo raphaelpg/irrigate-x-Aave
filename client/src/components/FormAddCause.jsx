@@ -62,9 +62,14 @@ class FormAddCause extends Component {
   }
 
 	render() {
-		return (
+
+		let FormAddCause = (
 			<div className="FormAddCause">
-				<form onSubmit={this.submit} >
+        <div className="FormAddCauseTitle_Close">
+          <p className="FormAddCauseTitle">Tell us more about your cause: </p>
+          <button className="closeFormAddCauseButton" onClick={this.props.closeFormAddCause}>x</button>
+				</div>
+        <form className="FormAddCauseFields" onSubmit={this.submit} >
           <label>Name</label>
           <div className="form-input">
             <input 
@@ -112,7 +117,7 @@ class FormAddCause extends Component {
               onChange={this.handleChange} 
             />
           </div>
-          <label>Ethereum address</label>
+          <label>Ethereum address that will receive the donations</label>
           <div className="form-input">
             <input
               name="address" 
@@ -121,18 +126,33 @@ class FormAddCause extends Component {
               onChange={this.handleChange} 
             />
           </div>
-          <label>Logo file name</label>
+          <label>Upload a picture that will appear on the list</label>
           <div className="form-input">
+          <label className ="FormAddCauseButtonFileLabel">Choose a file
             <input
+              className="FormAddCauseButtonFile"
               name="file" 
               type="file"
               onChange={this.handleLogoChange} 
-            />
+             />
+          </label>
+            
           </div>
-          <button>Submit</button>
+          <button className ="FormAddCauseButton">Submit your cause</button>
         </form>
       </div> 
 		)
+
+    if (! this.props.displayFormAddCause) {
+      FormAddCause = null;
+    }
+
+    return (
+      <div>
+        {FormAddCause}
+      </div>
+    );
+
 	}
 }
 

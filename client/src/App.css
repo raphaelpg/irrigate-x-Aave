@@ -1,9 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Muli:wght@300;400;700&display=swap');
+
 .app {
+  font-family: 'Muli', sans-serif;
   padding: 0px;
 }
 
 .form-input{
   margin: 10px 0px;
+}
+
+.Navbar{
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  background: darkkhaki;
+  color: darkgreen;
+}
+.NavbarLeftCorner{
+  display: flex;
+  margin: 0 0 0 10px;
+}
+
+.HomeDescription{
+  width: 100%;
+  height: 300px;
+  display: flex;
+  background: beige;
+  color: darkgreen;
+  font-size: larger;
+  border-bottom: 5px solid darkkhaki;
+}
+.HomeDescriptionContainer{
+  width: 80%;
+  margin: auto auto;
+  display: flex;
+  justify-content: space-between;
 }
 
 .irrigateCausesList{
@@ -13,7 +45,6 @@
   justify-content: flex-start;
   flex-wrap: wrap;
 }
-
 .causeDisplay{
   width: 30%;
   border: 1px solid lightgrey;
@@ -25,13 +56,21 @@
   width: 100%;
 }
 
-.Navbar{
-  display: flex;
-  justify-content: space-between;
-  background: #1B510F;
-  color: #FFF7BC;
+
+
+
+.Footer{
+  width: 100%;
+  background: darkkhaki;
+  color: white;
+  font-size: larger;
 }
-.NavbarLeftCorner{
+.FooterContainer{
   display: flex;
-  margin: 0 0 0 10px;
+  height: 80px;
+}
+.FooterDescription{
+  font-weight: bolder;
+  margin: auto auto;
+  display: flex;
 }

@@ -29,11 +29,13 @@ class CausesList extends Component {
       <div className="causeDisplay" key={index}>
         <img className="causeLogo" src={cause.logoName} alt={cause.name} />
         <h3>{cause.name}</h3>
-        <p>{cause.category}</p>
-        <p>{cause.continent}</p>
-        <p>{cause.country}</p>
+        {/*<p>{cause.category}</p>*/}
+        <p>Activity's location: {cause.continent}, {cause.country}</p>
         <p>{cause.description}</p>
-        <p>{cause.address}</p>
+        <p>Monthly donors: 2000 persons</p>
+        <p>Monthly donations: 1500 DAI</p>
+        <p>Total funds raised: 23500 DAI</p>
+        {/*<p>{cause.address}</p>*/}
       </div>
     ))
   }
@@ -41,7 +43,19 @@ class CausesList extends Component {
 	render() {
 		return (
 			<div className="irrigateCausesList">
-        {this.displayIrrigateCauses(this.state.causes)}
+        <div className="causesListFilterContainer">
+          <p className="causesListFilterName">All</p>
+          <p className="causesListFilterName">Animal Protection</p>
+          <p className="causesListFilterName">Child Protection</p>
+          <p className="causesListFilterName">Disease Fight</p>
+          <p className="causesListFilterName">Ecology</p>
+          <p className="causesListFilterName">Education</p>
+          <p className="causesListFilterName">Human Rights</p>
+          <p className="causesListFilterName">Hunger Fight</p>
+        </div>
+        <div className="causesListContainer">
+          {this.displayIrrigateCauses(this.state.causes)}
+        </div>
       </div>
 		)
 	}
