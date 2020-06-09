@@ -33,6 +33,93 @@ $causeFontColor: #454545;
   height: 55px;
   margin: auto 10px;
 }
+.NavbarRightCorner{
+  display: flex;
+  flex-direction: row;
+  margin: auto 0px;
+}
+.displayFormAddUserButton{
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 100px;
+  height: 50px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.displayFormAddUserButton:hover{
+  color: white;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.displayFormLoginUserButton{
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 100px;
+  height: 50px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.displayFormLoginUserButton:hover{
+  color: white;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.FormAddUser{
+  position: absolute;
+  background: white;
+  width: 400px;
+  margin: 0;
+  padding: 0px 20px 20px 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 20px;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  color: grey;
+}
+.FormAddUser input{
+  width: 75%;
+}
+.FormAddUserTitle_Close{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.FormAddUserTitle{
+  font-size: xx-large;
+  font-weight: bold;
+  color: $irrigateBackground;
+  margin: 10px 0px 20px 0px;
+}
+.closeFormAddUserButton{
+  background: white;
+  color: grey;
+  font-size: large;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  height: 10px;
+  margin-top: 10px;
+}
+.closeFormAddUserButton:hover{
+  cursor: pointer;
+}
+
 
 .HomeDescription{
   width: 100%;
@@ -52,7 +139,7 @@ $causeFontColor: #454545;
 .displayFormAddCauseButton{
   position: absolute;
   left: 80%;
-  top: 60%;
+  top: 300px;
   margin: 0 0 0 0;
   padding: 0 0 0 0;
   width: 200px;
@@ -77,14 +164,16 @@ $causeFontColor: #454545;
   position: absolute;
   background: white;
   width: 700px;
-  height: 700px;
   margin: 0;
+  padding: 0 0 20px 0;
   left: 50%;
   transform: translateX(-50%);
   top: 20px;
   border: 1px solid $irrigateBackground;
   border-radius: 15px;
   z-index: 9999;
+  display: flex;
+  flex-direction: column;
 }
 .FormAddCauseTitle_Close{
   display: flex;
@@ -94,9 +183,10 @@ $causeFontColor: #454545;
   margin: 10px auto;
 }
 .FormAddCauseTitle{
-  font-size: large;
+  font-size: xx-large;
   font-weight: bold;
   color: $irrigateBackground;
+  margin: 10px 0px 20px 0px;
 }
 .closeFormAddCauseButton{
   background: white;
@@ -105,6 +195,7 @@ $causeFontColor: #454545;
   font-weight: bold;
   border: none;
   outline: none;
+  height: 10px;
 }
 .FormAddCauseFields{
   padding: 0 4%;
@@ -112,8 +203,12 @@ $causeFontColor: #454545;
   color: grey;
   font-weight: bold;
 }
+.FormAddCauseFields textarea,
+.FormAddCauseFields input{
+  width: 75%;
+}
 .FormAddCauseButton{
-  margin: 0 0 0 0;
+  margin: 20px 0 0 0;
   padding: 0 0 0 0;
   width: 200px;
   height: 30px;
@@ -126,15 +221,19 @@ $causeFontColor: #454545;
   outline: none;
   transition: all 0.5s;
 }
+.FormAddCauseButton:hover{
+  cursor: pointer;
+}
 .FormAddCauseButtonFileLabel{
   cursor: pointer;
-  width: 267px;
-  height: 30px;
+  min-height: 30px;
+  max-height: 30px;
   background: darkgreen;
   padding: 5px 30px 8px;
   border-radius: 15px;
   color: white;
-  font-size: 15px;
+  font-size: 14px;
+  display: table-cell;
 }
 .FormAddCauseButtonFile{
   display: none;
@@ -177,8 +276,25 @@ $causeFontColor: #454545;
   border-radius: 8px;
   background: white;
 }
-.causeLogo{
+.causeLogoContainer{
+  max-height: 180px;
+  height: 180px;
+  max-width: 100%;
   width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.causeLogo{
+  display: block;
+  max-width: 100%;
+  max-height: 180px;
+  width: auto;
+  height: auto;
+}
+.causeNumber{
+  color: $irrigateBackground;
+  font-weight: bold;
 }
 
 .Footer{

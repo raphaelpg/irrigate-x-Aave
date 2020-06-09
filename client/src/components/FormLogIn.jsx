@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 
-class FormAddUser extends Component {
+class FormLogIn extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -15,21 +15,24 @@ class FormAddUser extends Component {
     this.setState({ [name]: value })
   }
 
-	submitUser = (event) => {
+	logUser = (event) => {
     event.preventDefault()
     const payload = new FormData()
 
     payload.append('email', this.state.email)
     payload.append('password', this.state.password)
 
-    axios.post("/user/signup", payload)
-      .then(() => {
-        console.log('Sign up request sent to the server')
+    axios.post("/user/login", payload)
+      .then((res) => {
+        sessionStorage.setItem('userAuth', 'true');
+        sessionStorage.setItem('userToken', res.data.token);
         this.resetSignupInputs()
+        this.props.checkSessionStorage()
       })
-      .catch(() => {
-        console.log('Internal server error')
-      })
+      .catch((error) => {
+        console.log(error)
+      }
+    )
   }
 
   resetSignupInputs = () => {
@@ -41,13 +44,13 @@ class FormAddUser extends Component {
 
 	render() {
 		
-    let FormAddUser = (
+    let FormLogIn = (
       <div className="FormAddUser">
         <div className="FormAddUserTitle_Close">
-          <p className="FormAddUserTitle">Sign up: </p>
-          <button className="closeFormAddUserButton" onClick={this.props.closeFormAddUser}>x</button>
+          <p className="FormAddUserTitle">Login: </p>
+          <button className="closeFormAddUserButton" onClick={this.props.closeFormLogIn}>x</button>
   			</div>
-        <form onSubmit={this.submitUser} >
+        <form onSubmit={this.logUser} >
           <label>Email</label>
           <div className="form-input">
             <input 
@@ -66,21 +69,21 @@ class FormAddUser extends Component {
               onChange={this.handleChange} 
             />
           </div>
-          <button className="FormAddCauseButton">Sign up</button>
+          <button className="FormAddCauseButton">Login</button>
         </form>
       </div>
 		)
 
-    if (! this.props.displayFormAddUser) {
-      FormAddUser = null;
+    if (! this.props.displayFormLogIn) {
+      FormLogIn = null;
     }
 
     return (
       <div>
-        {FormAddUser}
+        {FormLogIn}
       </div>
     )
 	}
 }
 
-export default FormAddUser;
+export default FormLogIn;

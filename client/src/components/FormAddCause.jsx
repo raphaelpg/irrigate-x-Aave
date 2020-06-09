@@ -24,6 +24,11 @@ class FormAddCause extends Component {
     this.setState({
       logo: event.target.files[0]
     })
+    let fileName = ''
+    console.log(document.getElementById('file-uploaded').value)
+    fileName = document.getElementById('file-uploaded').value
+    let fileNameParsed = fileName.split("\\")
+    document.getElementById('file-selected').innerHTML = ' ' + fileNameParsed[fileNameParsed.length - 1]
   }
 
   submit = (event) => {
@@ -128,8 +133,10 @@ class FormAddCause extends Component {
           </div>
           <label>Upload a picture that will appear on the list</label>
           <div className="form-input">
-          <label className ="FormAddCauseButtonFileLabel">Choose a file
+          <label className ="FormAddCauseButtonFileLabel">Choose a file: 
+            <span id="file-selected"></span>
             <input
+              id="file-uploaded"
               className="FormAddCauseButtonFile"
               name="file" 
               type="file"
@@ -151,7 +158,7 @@ class FormAddCause extends Component {
       <div>
         {FormAddCause}
       </div>
-    );
+    )
 
 	}
 }

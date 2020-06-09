@@ -1,40 +1,31 @@
 import React, { Component } from 'react';
-import axios from 'axios'
 
 class CausesList extends Component {
-
-	state = {
-		causes: []
-	};
-
-	componentDidMount = () => {
-    this.getIrrigateCauses()
+  constructor(props){
+    super(props);
+    this.state = {
+      causes: this.props.causes,
+    };
   }
 
-  getIrrigateCauses = () => {
-    axios.get('/api')
-      .then((response) => {
-        const data = response.data
-        this.setState({ causes: data })
-        console.log('Causes list received')
-      })
-      .catch(() => {
-        alert('Error retrieving causes list')
-      })
+	componentDidMount = () => {
+    this.displayIrrigateCauses()
   }
 
   displayIrrigateCauses = (causes) => {
     if (!causes) return null
     return causes.map( (cause, index) => (
       <div className="causeDisplay" key={index}>
-        <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+        <div className="causeLogoContainer">
+          <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+        </div>
         <h3>{cause.name}</h3>
-        {/*<p>{cause.category}</p>*/}
+        <p>{cause.category}</p>
         <p>Activity's location: {cause.continent}, {cause.country}</p>
         <p>{cause.description}</p>
-        <p>Monthly donors: 2000 persons</p>
-        <p>Monthly donations: 1500 DAI</p>
-        <p>Total funds raised: 23500 DAI</p>
+        <p className="causeNumber">Monthly donors: 2000 persons</p>
+        <p className="causeNumber">Monthly donations: 1500 DAI</p>
+        <p className="causeNumber">Total funds raised: 23500 DAI</p>
         {/*<p>{cause.address}</p>*/}
       </div>
     ))
@@ -54,7 +45,7 @@ class CausesList extends Component {
           <p className="causesListFilterName">Hunger Fight</p>
         </div>
         <div className="causesListContainer">
-          {this.displayIrrigateCauses(this.state.causes)}
+          {this.displayIrrigateCauses(this.props.causes)}
         </div>
       </div>
 		)

@@ -19,8 +19,8 @@ const storage = multer.diskStorage({
 const upload = multer ({ storage: storage }).single('file')
 
 //Routes
-router.get('/api', (req, res) => {
-	let collection = mongoose.connection.collection('causes')
+router.get('/api', async (req, res) => {
+	let collection = await mongoose.connection.collection('causes')
 
 	collection.find({	}).toArray((err, data) => {
 		if (err) throw err
