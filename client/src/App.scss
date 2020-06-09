@@ -119,7 +119,26 @@ $causeFontColor: #454545;
 .closeFormAddUserButton:hover{
   cursor: pointer;
 }
-
+.Logout{
+  margin: auto;
+}
+.LogoutButton{
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  width: 100px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.LogoutButton:hover{
+  color: white;
+  cursor: pointer;
+}
 
 .HomeDescription{
   width: 100%;
@@ -189,13 +208,20 @@ $causeFontColor: #454545;
   margin: 10px 0px 20px 0px;
 }
 .closeFormAddCauseButton{
-  background: white;
+  background: transparent;
   color: grey;
   font-size: large;
   font-weight: bold;
   border: none;
   outline: none;
   height: 10px;
+  position: absolute;
+  right: 1px;
+  top: 1px;
+  border-radius: 15px;
+}
+.closeFormAddCauseButton:hover{
+  cursor: pointer;
 }
 .FormAddCauseFields{
   padding: 0 4%;
@@ -238,7 +264,37 @@ $causeFontColor: #454545;
 .FormAddCauseButtonFile{
   display: none;
 }
-
+.Stream{
+  position: absolute;
+  background: white;
+  width: 700px;
+  margin: 0;
+  padding: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 20px;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  color: grey;
+}
+.StreamTitle{
+  font-size: xx-large;
+  font-weight: bold;
+  color: $irrigateBackground;
+  margin: 0px 0px 20px 0px;
+}
+.setStreamForm{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px 0 20px 0;
+}
+.setStreamForm * {
+  margin: 0;
+}
 
 .irrigateCausesList{
   width: 100%;

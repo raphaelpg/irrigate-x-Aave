@@ -24,6 +24,7 @@ class FormLogIn extends Component {
 
     axios.post("/user/login", payload)
       .then((res) => {
+        sessionStorage.setItem('userEmail', this.state.email)
         sessionStorage.setItem('userAuth', 'true');
         sessionStorage.setItem('userToken', res.data.token);
         this.resetSignupInputs()

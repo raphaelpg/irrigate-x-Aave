@@ -34,7 +34,11 @@ router.post('/signup', (req, res, next) => {
 							const user = new User({
 								_id: new mongoose.Types.ObjectId(),
 								email: req.body.email,
-								password: hash
+								password: hash,
+								role: 'USER',
+								address: '',
+								streamAmount: '',
+								subscribedCauses: []
 							})
 							let collection = mongoose.connection.collection('users')
 							collection.insertOne(user, (erreur, result) => {
@@ -98,6 +102,28 @@ router.post('/login', (req, res, next) => {
 		})
 })
 
+router.post('/updateStreamAmount', checkAuth, (req, res, next) => {
+	upload(req, res, function(err) {
+		if (err instanceof multer.MulterError) {
+			return res.status(500).json(err)
+		} else if (err) {
+			return res.status(500).json(err)
+		}
+		let collection = mongoose.connection.collection('users')
+		collection.updateOne({ email: req.body.email }, { $set: {streamAmount: req.body.newStreamAmount } }, (err, result) => {
+			if (err) {
+				console.log(err)
+				res.status(500).json({
+					error: err
+				})
+			}
+			res.status(201).json({
+				message: 'User streamAmount updated'
+			})
+		})
+	})
+})
+
 router.delete('/:userId', (req, res, next) => {
 	let collection = mongoose.connection.collection('users')
 	collection.deleteOne({ _id: req.params.userId }, (err, result) => {
@@ -114,11 +140,18 @@ router.delete('/:userId', (req, res, next) => {
 	})
 })
 
-router.get('/userCauses', checkAuth, (req, res, next) => {
-	let collection = mongoose.connection.collection('users')
-	collection.find({ email: req.body.email	}).toArray((err, data) => {
-		if (err) throw err
-		res.json(data)
+router.post('/data', checkAuth, (req, res, next) => {
+	upload(req, res, function(err) {
+		if (err instanceof multer.MulterError) {
+			return res.status(500).json(err)
+		} else if (err) {
+			return res.status(500).json(err)
+		}
+		let collection = mongoose.connection.collection('users')
+		collection.find({ email: req.body.email	}).toArray((err, data) => {
+			if (err) throw err
+			res.json(data)
+		})
 	})
 })
 

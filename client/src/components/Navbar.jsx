@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import FormAddUser from './FormAddUser'
 import FormLogIn from './FormLogIn'
+import Stream from './Stream'
+import Logout from './Logout'
 const logo = require('./planet.png')
 
 class Navbar extends Component {
@@ -12,6 +14,7 @@ class Navbar extends Component {
 	    userStatus: '',
 	    displayFormAddUser: false,
 	    displayFormLogIn: false,
+	    displayStream: false,
 	  }
 	}
 
@@ -26,6 +29,8 @@ class Navbar extends Component {
         this.setState({ userAuth: sessionUserAuth, userToken: sessionUserToken })
         if (sessionUserAuth === 'true') {
           this.setState({ userStatus: 'Connected' })
+        } else {
+        	this.setState({ userStatus: '' })
         }
     } catch (e) {
         console.log(e)
@@ -34,7 +39,6 @@ class Navbar extends Component {
 
 
 	render() {
-		console.log(this.state)
 
 		let FormAddUserButton = (
 			<div className="NavbarRightCorner">
@@ -43,8 +47,17 @@ class Navbar extends Component {
 			</div>
 		)
 
+		let FormUserConnected = (
+			<div className="NavbarRightCorner">
+				<button className="displayFormAddUserButton description" onClick={(e) => this.setState({ displayStream:true })}>Manage your stream</button>
+				<Logout	checkSessionStorage={ this.checkSessionStorage } />
+			</div>
+		)
+
 		if (this.state.userStatus === 'Connected') {
       FormAddUserButton = null
+    } else {
+    	FormUserConnected = null
     }
 
 		return (
@@ -55,6 +68,8 @@ class Navbar extends Component {
         </div>
         <div className="NavbarRightCorner">
         	{FormAddUserButton}
+	        {FormUserConnected}
+
 	        <FormAddUser 
 	        	displayFormAddUser={ this.state.displayFormAddUser } 
             closeFormAddUser={(e) => this.setState({ displayFormAddUser:false })}
@@ -63,6 +78,10 @@ class Navbar extends Component {
 	        	displayFormLogIn={ this.state.displayFormLogIn } 
             closeFormLogIn={(e) => this.setState({ displayFormLogIn:false })}
             checkSessionStorage={ this.checkSessionStorage }
+	        />
+	        <Stream
+	        	displayStream={ this.state.displayStream } 
+            closeStream={(e) => this.setState({ displayStream:false })}
 	        />
       	</div>
       </div> 
