@@ -19,24 +19,34 @@ class Stream extends Component {
 
   async getUserData() {
     try {
-      const payload = new FormData()
-      const userEmail = sessionStorage.getItem('userEmail')
-      const userToken = sessionStorage.getItem('userToken')
-      payload.append('email', userEmail)      
-      let config = {
-        headers: {
-          Authorization: 'Bearer ' + userToken
-        }
-      }
+      if (sessionStorage.getItem('userAuth') === 'true') {
+        const userEmail = sessionStorage.getItem('userEmail')
+        const userToken = sessionStorage.getItem('userToken')
 
-      axios.post('/user/data', payload, config)
-        .then((response) => {
-          const data = response.data
-          // this.setState({ userCauses: data })
-        })
-        .catch(() => {
-          console.log('Error retrieving user causes list')
-        })
+        const payload = new FormData()
+        payload.append('email', userEmail)      
+        let config = {
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          }
+        }
+
+        axios.post('/user/data', payload, config)
+          .then((response) => {
+            const data = response.data
+            console.log(data)
+            console.log(data[0])
+            console.log(data[0].streamAmount)
+            this.setState({
+              currentStreamAmount: data[0].streamAmount,
+              userCauses: data[0].subscribedCauses
+            })
+            // this.setState({ userCauses: data })
+          })
+          .catch(() => {
+            console.log('Error retrieving user causes list')
+          })
+      }
     } catch (e) {
       console.log(e)
     }
@@ -59,6 +69,7 @@ class Stream extends Component {
     axios.post("/user/updateStreamAmount", payload, config)
       .then(() => {
         console.log('New stream amount sent to the server')
+        this.getUserData()
       })
       .catch(() => {
         console.log('Internal server error')
@@ -71,6 +82,8 @@ class Stream extends Component {
   }
 
 	render() {
+
+    console.log(this.state)
 		
     let Stream = (
       <div className="Stream">
