@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Muli:wght@300;400;700&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Muli:wght@300;400;700&display=swap');*/
+@font-face {
+    font-family: 'Muli-Regular';
+    src: url('./Muli-Regular.ttf');
+}
 
 /*VARIABLES SETUP*/
 $irrigateBackground: darkgreen;
@@ -7,7 +11,7 @@ $causeListWidth: 1110px;
 $causeFontColor: #454545;
 
 .app {
-  font-family: 'Muli', sans-serif;
+  font-family: 'Muli-Regular', sans-serif;
   padding: 0px;
 }
 

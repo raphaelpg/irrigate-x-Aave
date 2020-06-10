@@ -5,7 +5,7 @@ import HomeDescription from './components/HomeDescription'
 import FormAddCause from './components/FormAddCause'
 import CausesList from './components/CausesList'
 import Footer from './components/Footer'
-import './App.scss'
+import './css/App.scss'
 
 class App extends React.Component {
 

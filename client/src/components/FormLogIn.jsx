@@ -29,6 +29,7 @@ class FormLogIn extends Component {
         sessionStorage.setItem('userToken', res.data.token);
         this.resetSignupInputs()
         this.props.checkSessionStorage()
+        this.props.getUserData()
       })
       .catch((error) => {
         console.log(error)

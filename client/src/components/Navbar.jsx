@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import FormAddUser from './FormAddUser'
 import FormLogIn from './FormLogIn'
 import Stream from './Stream'
@@ -37,6 +38,37 @@ class Navbar extends Component {
     }
   }
 
+  async getUserData() {
+    try {
+      if (sessionStorage.getItem('userAuth') === 'true') {
+        const userEmail = sessionStorage.getItem('userEmail')
+        const userToken = sessionStorage.getItem('userToken')
+
+        const payload = new FormData()
+        payload.append('email', userEmail)      
+        let config = {
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          }
+        }
+
+        axios.post('/user/data', payload, config)
+          .then((response) => {
+            const data = response.data
+            this.setState({
+              currentStreamAmount: data[0].streamAmount,
+              userCauses: data[0].subscribedCauses
+            })
+            // this.setState({ userCauses: data })
+          })
+          .catch(() => {
+            console.log('Error retrieving user causes list')
+          })
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
 	render() {
 
@@ -78,6 +110,7 @@ class Navbar extends Component {
 	        	displayFormLogIn={ this.state.displayFormLogIn } 
             closeFormLogIn={(e) => this.setState({ displayFormLogIn:false })}
             checkSessionStorage={ this.checkSessionStorage }
+            getUserData={ this.getUserData }
 	        />
 	        <Stream
 	        	displayStream={ this.state.displayStream } 

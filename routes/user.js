@@ -148,7 +148,30 @@ router.post('/data', checkAuth, (req, res, next) => {
 			return res.status(500).json(err)
 		}
 		let collection = mongoose.connection.collection('users')
-		collection.find({ email: req.body.email	}).toArray((err, data) => {
+		collection.find({ email: req.body.email	}, { projection: { _id: 0, email: 0, password: 0 }}).toArray((err, data) => {
+			if (err) throw err
+			res.json(data)
+		})
+	})
+})
+
+router.post('/causes', checkAuth, async (req, res) => {
+	upload(req, res, function(err) {
+		if (err instanceof multer.MulterError) {
+			return res.status(500).json(err)
+		} else if (err) {
+			return res.status(500).json(err)
+		}
+
+		let reqCausesBuild = {$or: []}
+		let causesArray = req.body.causesId.split(",")
+		for (let i=0; i<causesArray.length; i++){
+			let inputId = mongoose.Types.ObjectId(causesArray[i])
+			reqCausesBuild.$or.push({"_id": inputId})
+		}
+
+		let collection = mongoose.connection.collection('causes')
+		collection.find( reqCausesBuild ).toArray((err, data) => {
 			if (err) throw err
 			res.json(data)
 		})
