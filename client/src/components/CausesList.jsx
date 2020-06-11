@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+// import axios from 'axios'
 
 class CausesList extends Component {
   constructor(props){
     super(props);
     this.state = {
-      causes: this.props.causes,
     };
   }
 
 	componentDidMount = () => {
-    this.displayIrrigateCauses()
+    // this.displayIrrigateCauses()
   }
 
   displayIrrigateCauses = (causes) => {
@@ -23,12 +23,23 @@ class CausesList extends Component {
         <p>{cause.category}</p>
         <p>Activity's location: {cause.continent}, {cause.country}</p>
         <p>{cause.description}</p>
+        {/*<a href="/localhost:8080">Website</a>*/}
         <p className="causeNumber">Monthly donors: 2000 persons</p>
         <p className="causeNumber">Monthly donations: 1500 DAI</p>
         <p className="causeNumber">Total funds raised: 23500 DAI</p>
+        <button name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
         {/*<p>{cause.address}</p>*/}
       </div>
     ))
+  }
+
+  // addCauseToUserList = ({ target }) => {
+  //   console.log(target.name)
+  // }
+
+  handleChange = ({ target }) => {
+    const { name, value } = target
+    this.setState({ [name]: value })
   }
 
 	render() {

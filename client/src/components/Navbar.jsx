@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
 import FormAddUser from './FormAddUser'
 import FormLogIn from './FormLogIn'
 import Stream from './Stream'
@@ -16,59 +16,60 @@ class Navbar extends Component {
 	    displayFormAddUser: false,
 	    displayFormLogIn: false,
 	    displayStream: false,
+	    userCausesId: [],
 	  }
 	}
 
   componentDidMount = () => {
-  	this.checkSessionStorage()
+  	// this.props.checkSessionStorage()
   }
 
-  checkSessionStorage = async () => {
-    try {
-        const sessionUserAuth = await sessionStorage.getItem('userAuth')
-        const sessionUserToken = await sessionStorage.getItem('userToken')
-        this.setState({ userAuth: sessionUserAuth, userToken: sessionUserToken })
-        if (sessionUserAuth === 'true') {
-          this.setState({ userStatus: 'Connected' })
-        } else {
-        	this.setState({ userStatus: '' })
-        }
-    } catch (e) {
-        console.log(e)
-    }
-  }
+  // checkSessionStorage = async () => {
+  //   try {
+  //       const sessionUserAuth = await sessionStorage.getItem('userAuth')
+  //       const sessionUserToken = await sessionStorage.getItem('userToken')
+  //       this.setState({ userAuth: sessionUserAuth, userToken: sessionUserToken })
+  //       if (sessionUserAuth === 'true') {
+  //         this.setState({ userStatus: 'Connected' })
+  //       } else {
+  //       	this.setState({ userStatus: '' })
+  //       }
+  //   } catch (e) {
+  //       console.log(e)
+  //   }
+  // }
 
-  async getUserData() {
-    try {
-      if (sessionStorage.getItem('userAuth') === 'true') {
-        const userEmail = sessionStorage.getItem('userEmail')
-        const userToken = sessionStorage.getItem('userToken')
+  // async getUserData() {
+  //   try {
+  //     if (sessionStorage.getItem('userAuth') === 'true') {
+  //       const userEmail = sessionStorage.getItem('userEmail')
+  //       const userToken = sessionStorage.getItem('userToken')
 
-        const payload = new FormData()
-        payload.append('email', userEmail)      
-        let config = {
-          headers: {
-            Authorization: 'Bearer ' + userToken
-          }
-        }
+  //       const payload = new FormData()
+  //       payload.append('email', userEmail)      
+  //       let config = {
+  //         headers: {
+  //           Authorization: 'Bearer ' + userToken
+  //         }
+  //       }
 
-        axios.post('/user/data', payload, config)
-          .then((response) => {
-            const data = response.data
-            this.setState({
-              currentStreamAmount: data[0].streamAmount,
-              userCauses: data[0].subscribedCauses
-            })
-            // this.setState({ userCauses: data })
-          })
-          .catch(() => {
-            console.log('Error retrieving user causes list')
-          })
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  //       axios.post('/user/data', payload, config)
+  //         .then((response) => {
+  //           const data = response.data
+  //           this.setState({
+  //             currentStreamAmount: data[0].streamAmount,
+  //             userCauses: data[0].subscribedCauses
+  //           })
+  //           // this.setState({ userCauses: data })
+  //         })
+  //         .catch(() => {
+  //           console.log('Error retrieving user causes list')
+  //         })
+  //     }
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
 
 	render() {
 
@@ -109,12 +110,13 @@ class Navbar extends Component {
 	        <FormLogIn 
 	        	displayFormLogIn={ this.state.displayFormLogIn } 
             closeFormLogIn={(e) => this.setState({ displayFormLogIn:false })}
-            checkSessionStorage={ this.checkSessionStorage }
-            getUserData={ this.getUserData }
+            checkSessionStorage={ this.props.checkSessionStorage }
+            getUserData={ this.props.getUserData }
 	        />
 	        <Stream
 	        	displayStream={ this.state.displayStream } 
             closeStream={(e) => this.setState({ displayStream:false })}
+            userCausesId={this.state.userCausesId}
 	        />
       	</div>
       </div> 

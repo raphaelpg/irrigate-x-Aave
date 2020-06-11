@@ -5,110 +5,18 @@ class Stream extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-      currentStreamAmount: '0',
-      setStreamAmount: '',
-      userCausesId: [],
-      userCauses: []
+      newStreamAmount: '',
+      donateOnceAmount: '5'
 		};
 	}
 
   componentDidMount = () => {
-    this.getUserData()
-  }
-
-  async getUserData() {
-    try {
-      if (sessionStorage.getItem('userAuth') === 'true') {
-        const userEmail = sessionStorage.getItem('userEmail')
-        const userToken = sessionStorage.getItem('userToken')
-
-        const payload = new FormData()
-        payload.append('email', userEmail)      
-        let config = {
-          headers: {
-            Authorization: 'Bearer ' + userToken
-          }
-        }
-
-        axios.post('/user/data', payload, config)
-          .then((response) => {
-            const data = response.data
-            console.log(data)
-            console.log(data[0])
-            console.log(data[0].streamAmount)
-            this.setState({
-              currentStreamAmount: data[0].streamAmount,
-              userCausesId: data[0].subscribedCauses
-            })
-            this.getUserCauses()
-            // this.setState({ userCauses: data })
-          })
-          .catch((e) => {
-            console.log('Error retrieving user data')
-            console.log(e)
-          })
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-
-
-  setStreamAmount = (event) => {
-    event.preventDefault()
-    const payload = new FormData()
-    const userEmail = sessionStorage.getItem('userEmail')
-    const userToken = sessionStorage.getItem('userToken')
-    payload.append('email', userEmail)
-    payload.append('newStreamAmount', this.state.setStreamAmount)
-
-    let config = {
-      headers: {
-        Authorization: 'Bearer ' + userToken
-      }
-    }
-
-    axios.post("/user/updateStreamAmount", payload, config)
-      .then(() => {
-        console.log('New stream amount sent to the server')
-        this.getUserData()
-      })
-      .catch(() => {
-        console.log('Internal server error')
-      })
+    
   }
 
   handleChange = ({ target }) => {
     const { name, value } = target
     this.setState({ [name]: value })
-  }
-
-  async getUserCauses() {
-    try {
-      const payload = new FormData()
-      const userToken = sessionStorage.getItem('userToken')
-      payload.append('causesId', this.state.userCausesId)
-
-      let config = {
-        headers: {
-          Authorization: 'Bearer ' + userToken
-        }
-      }
-
-      axios.post('/user/causes', payload, config)
-        .then((response) => {
-          console.log(response.data)
-          const data = response.data
-          this.setState({ userCauses: data })
-        })
-        .catch((e) => {
-          console.log(e)
-          console.log('Error retrieving causes list')
-        })
-    } catch (e) {
-      console.log(e)
-    }
   }
 
   displayUserCauses = (userCauses) => {
@@ -124,6 +32,62 @@ class Stream extends Component {
     ))
   }
 
+  setStreamAmount = (event) => {
+    event.preventDefault()
+    const payload = new FormData()
+    const userEmail = sessionStorage.getItem('userEmail')
+    const userToken = sessionStorage.getItem('userToken')
+    payload.append('email', userEmail)
+    payload.append('newStreamAmount', this.state.newStreamAmount)
+    // payload.append('newStreamAmount', this.state.setStreamAmount)
+
+    let config = {
+      headers: {
+        Authorization: 'Bearer ' + userToken
+      }
+    }
+
+    axios.post("/user/updateStreamAmount", payload, config)
+      .then(() => {
+        console.log('New stream amount sent to the server')
+        this.props.getUserData()
+      })
+      .catch(() => {
+        console.log('Internal server error')
+      })
+  }
+
+  donateOnce = async (event) => {
+    event.preventDefault()
+    const { irrigateAddress, accounts, mockDaiContract } = this.props
+    let userBalance = await mockDaiContract.methods.balanceOf(accounts[0]).call()
+    console.log(userBalance)
+    if (userBalance >= this.state.donateOnceAmount) {
+      await mockDaiContract.methods.transfer(irrigateAddress, this.state.donateOnceAmount).send({from: accounts[0]})
+      //inform server that user X have sent amount Y to causes 1, 2 , 3 ...
+      const payload = new FormData()
+      const userEmail = sessionStorage.getItem('userEmail')
+      const userToken = sessionStorage.getItem('userToken')
+      payload.append('email', userEmail)
+      payload.append('gavedAmount', this.state.donateOnceAmount)
+
+      let config = {
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        }
+      }
+
+      // axios.post("/donations/donateOnce", payload, config)
+      //   .then(() => {
+      //     console.log('Donation sent')
+      //     // this.props.getUserData()
+      //   })
+      //   .catch(() => {
+      //     console.log('Internal server error')
+      //   })
+    } else alert("Unsufficient DAI balance")
+  }
+
 	render() {
 
     console.log(this.state)
@@ -136,20 +100,37 @@ class Stream extends Component {
         </div>
         <div>Your supported causes:</div>
         <div className="userCausesContainer">
-          {this.displayUserCauses(this.state.userCauses)}
+          {this.displayUserCauses(this.props.userCauses)}
         </div>
+
+        <div className="donateOnceContainer">
+          <form className="donateOnceForm" onSubmit={this.donateOnce} >
+            <label>Donation value: </label>
+            <div className="form-input">
+              <input 
+                name="donateOnceAmount" 
+                type="number" 
+                min="5"
+                step="5"
+                placeholder="5"
+                onChange={this.handleChange} 
+              /> DAI
+            </div>
+            <button className="FormAddCauseButton">Donate once</button>
+          </form>
+        </div>
+
         <div>
-          <p className="">Your current stream: {this.state.currentStreamAmount} DAI / month</p>
+          <p className="">Your current stream: {this.props.currentStreamAmount} DAI / month</p>
           <form className="setStreamForm" onSubmit={this.setStreamAmount} >
             <label>Set monthly donation to: </label>
             <div className="form-input">
               <input 
-                name="setStreamAmount" 
+                name="newStreamAmount" 
                 type="number" 
                 min="0"
                 step="5"
                 placeholder="5"
-                value={this.state.setStreamAmount} 
                 onChange={this.handleChange} 
               /> DAI
             </div>
