@@ -223,7 +223,7 @@ class App extends React.Component {
               userCauses={this.state.userCauses}
               currentStreamAmount={this.state.currentStreamAmount}
               getUserData={this.getUserData}
-              irrigateAddress={ this.irrigateAddress }
+              irrigateAddress={ this.state.irrigateAddress }
               accounts={ this.state.accounts }
               mockDaiContract={ this.state.mockDaiContract }
             />

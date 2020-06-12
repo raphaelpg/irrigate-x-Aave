@@ -8,6 +8,7 @@ require('dotenv').config()
 const app = express()
 const routes = require('./routes/api')
 const userRoutes = require('./routes/user')
+const donationsRoutes = require('./routes/donations')
 
 //Database connection
 const PORT = process.env.PORT || 8080
@@ -33,6 +34,7 @@ app.use(morgan('tiny'))
 //Use router
 app.use('/', routes)
 app.use('/user', userRoutes)
+app.use('/donations', donationsRoutes)
 
 //Start server
 app.listen(PORT, console.log(`Server listening on ${PORT}`))

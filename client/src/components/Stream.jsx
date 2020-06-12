@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import getWeb3 from '../utils/getWeb3';
 
 class Stream extends Component {
 	constructor(props){
@@ -59,38 +60,50 @@ class Stream extends Component {
 
   donateOnce = async (event) => {
     event.preventDefault()
+    const web3 = await getWeb3();
     const { irrigateAddress, accounts, mockDaiContract } = this.props
-    let userBalance = await mockDaiContract.methods.balanceOf(accounts[0]).call()
+    const getBalance = await mockDaiContract.methods.balanceOf(accounts[0]).call()
+    const userBalance = parseInt(getBalance)
+    const userDonation = web3.utils.toWei(this.state.donateOnceAmount, "ether").toString()
+    // const daiAmountinWei = web3.utils.toWei("1000", "ether").toString()
     console.log(userBalance)
-    if (userBalance >= this.state.donateOnceAmount) {
-      await mockDaiContract.methods.transfer(irrigateAddress, this.state.donateOnceAmount).send({from: accounts[0]})
+    console.log(typeof(userBalance))
+    console.log(userDonation)
+    console.log(typeof(userDonation))
+    if (userBalance >= userDonation) {
+      console.log("ok to transfer")
+      await mockDaiContract.methods.transfer(irrigateAddress, userDonation).send({from: accounts[0]})
+      .then(() => {
+        const payload = new FormData()
+        payload.append('amount', userDonation)
+        payload.append('causeAddress', '0x9730566588BFb9d3b8A8d6e0630F1e629399CB39')
+        
+        axios.post("/donations/donateOnce", payload)
+          .then(() => {
+            console.log('Donation sent')
+            // this.props.getUserData()
+          })
+          .catch(() => {
+            console.log('Internal server error')
+          })
+      })
       //inform server that user X have sent amount Y to causes 1, 2 , 3 ...
-      const payload = new FormData()
-      const userEmail = sessionStorage.getItem('userEmail')
-      const userToken = sessionStorage.getItem('userToken')
-      payload.append('email', userEmail)
-      payload.append('gavedAmount', this.state.donateOnceAmount)
+      // const userEmail = sessionStorage.getItem('userEmail')
+      // const userToken = sessionStorage.getItem('userToken')
+      // payload.append('gavedAmount', this.state.donateOnceAmount)
 
-      let config = {
-        headers: {
-          Authorization: 'Bearer ' + userToken
-        }
-      }
+      // let config = {
+      //   headers: {
+      //     Authorization: 'Bearer ' + userToken
+      //   }
+      // }
 
-      // axios.post("/donations/donateOnce", payload, config)
-      //   .then(() => {
-      //     console.log('Donation sent')
-      //     // this.props.getUserData()
-      //   })
-      //   .catch(() => {
-      //     console.log('Internal server error')
-      //   })
     } else alert("Unsufficient DAI balance")
   }
 
 	render() {
 
-    console.log(this.state)
+    console.log("Stream state: ", this.state)
 		
     let Stream = (
       <div className="Stream">
@@ -112,7 +125,7 @@ class Stream extends Component {
                 type="number" 
                 min="5"
                 step="5"
-                placeholder="5"
+                placeholder="0"
                 onChange={this.handleChange} 
               /> DAI
             </div>
