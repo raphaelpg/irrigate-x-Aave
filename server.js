@@ -2,13 +2,26 @@ const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const path = require('path')
-
+const cron = require('node-cron')
 require('dotenv').config()
 
 const app = express()
 const routes = require('./routes/api')
 const userRoutes = require('./routes/user')
 const donationsRoutes = require('./routes/donations')
+
+const HDWalletProvider = require('truffle-hdwallet-provider')
+const Web3 = require('web3')
+const seed = process.env.SEED
+const ropstenProvider = process.env.INFPROVIDER
+const provider = new HDWalletProvider(seed, ropstenProvider)
+const web3 = new Web3(provider)
+const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
+const mockDaiContractAbi = require('./contracts/MockDAI.json')
+const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
+// const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
+const LendingPoolAddressesProviderABI = require ('./contracts/LendingPoolAddressesProvider.json')
+const LendingPoolABI = require ('./contracts/LendingPool.json')
 
 //Database connection
 const PORT = process.env.PORT || 8080
@@ -35,6 +48,66 @@ app.use(morgan('tiny'))
 app.use('/', routes)
 app.use('/user', userRoutes)
 app.use('/donations', donationsRoutes)
+
+//Timeout function for batch management
+// cron.schedule('* * 1,15 * *', () => {
+cron.schedule('23 * * * *', async () => {
+	//make a deposit to aave lending pool of all DAIs in app account
+	const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
+	const appMockDaiBalance = await mockDaiContractInstance.methods.balanceOf(irrigateAddress).call()
+	const appMockDaiBalanceinWei = appMockDaiBalance.toString()
+	const referralCode = '0'
+
+	const lpAddressProviderAddress = '0x1c8756FD2B28e9426CDBDcC7E3c4d64fa9A54728' // mainnet address, for other addresses: https://docs.aave.com/developers/developing-on-aave/deployed-contract-instances
+	const lpAddressProviderContract = new web3.eth.Contract(LendingPoolAddressesProviderABI, lpAddressProviderAddress)
+
+	// Get the latest LendingPoolCore address
+	const lpCoreAddress = await lpAddressProviderContract.methods
+    .getLendingPoolCore()
+    .call()
+    .catch((e) => {
+        throw Error(`Error getting lendingPool address: ${e.message}`)
+    })
+	
+  // Approve the LendingPoolCore address with the DAI contract
+	await mockDaiContractInstance.methods
+    .approve(
+        lpCoreAddress,
+        daiAmountinWei
+    )
+    .send()
+    .catch((e) => {
+        throw Error(`Error approving DAI allowance: ${e.message}`)
+    })
+
+  // Get the latest LendingPool contract address
+	const lpAddress = await lpAddressProviderContract.methods
+    .getLendingPool()
+    .call()
+    .catch((e) => {
+        throw Error(`Error getting lendingPool address: ${e.message}`)
+    })
+
+  // Make the deposit transaction via LendingPool contract
+	const lpContract = new web3.eth.Contract(LendingPoolABI, lpAddress)
+	await lpContract.methods
+    .deposit(
+        mockDaiContractAddress,
+        daiAmountinWei,
+        referralCode
+    )
+    .send()
+    .catch((e) => {
+        throw Error(`Error depositing to the LendingPool contract: ${e.message}`)
+    })
+
+	//repay all the aDAIs to aave and get the DAIs back
+	//transfer the DAIs to corresponding causes
+	//keep interests needed for the app
+	//transfer remaining interests to the causes
+	//create new batch and insert it to mongodb 
+});
+
 
 //Start server
 app.listen(PORT, console.log(`Server listening on ${PORT}`))
