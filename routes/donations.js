@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const multer = require('multer')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const User = require('../models/user')
+const Batch = require('../models/batch')
 const upload = multer ({  }).single('file')
 const checkAuth = require('../middleware/check-auth')
 const HDWalletProvider = require('truffle-hdwallet-provider')
@@ -22,6 +22,57 @@ const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
 const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
 
 router.post('/donateOnce', (req, res, next) => {
+	upload(req, res, async function(err) {
+		if (err instanceof multer.MulterError) {
+			return res.status(500).json(err)
+		} else if (err) {
+			return res.status(500).json(err)
+		}
+		const receivedAmount = parseInt(req.body.amount)/Math.pow(10, 18)
+		const causeAddress = req.body.causeAddress
+		const currentBatch = "1"
+		let collection = mongoose.connection.collection('donations')
+		collection.find({ batch: currentBatch }).toArray((err, data) => {
+			if (err) {
+				return res.status(401).json({
+			 		message: 'database access failed'
+				})
+			}
+			if (data[0].causes[causeAddress]) {
+				const newAmount = data[0].causes[causeAddress] + receivedAmount
+			  const myquery = { batch: currentBatch }
+			  const newvalues = { $set: {causes: {[causeAddress]: newAmount}} }
+			  collection.updateOne(myquery, newvalues, function(err, response) {
+				  if (err) {
+						console.log(err)
+						return res.status(500).json({
+							error: err
+						})
+					}
+					return res.status(201).json({
+						message: 'amount added to causes fund'
+					})
+				})
+			} else {
+				const myquery = { batch: currentBatch }
+			  const newvalues = { $set: {causes: {[causeAddress]: receivedAmount}} }
+			  collection.updateOne(myquery, newvalues, function(err, response) {
+			  	if (err) {
+						console.log(err)
+						return res.status(500).json({
+							error: err
+						})
+					}
+					return res.status(201).json({
+						message: 'cause and fund created'
+					})
+				})
+			}
+		})
+	})
+})
+
+router.post('/sendToCause', (req, res, next) => {
 	upload(req, res, async function(err) {
 		if (err instanceof multer.MulterError) {
 			return res.status(500).json(err)

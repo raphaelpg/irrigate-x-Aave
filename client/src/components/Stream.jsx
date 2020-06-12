@@ -123,7 +123,7 @@ class Stream extends Component {
               <input 
                 name="donateOnceAmount" 
                 type="number" 
-                min="5"
+                min="1"
                 step="5"
                 placeholder="0"
                 onChange={this.handleChange} 
