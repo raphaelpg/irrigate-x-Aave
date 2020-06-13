@@ -6,7 +6,8 @@ const batchSchema = mongoose.Schema({
 	causes: { 
 		type: Object, 
 		required: true,
-	},
-})
+	},	
+}, { collection: 'donations' }
+)
 
 module.exports = mongoose.model('Batch', batchSchema)

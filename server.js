@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const morgan = require('morgan')
 const path = require('path')
 const cron = require('node-cron')
+const moment = require('moment')
 require('dotenv').config()
 
 const app = express()
@@ -10,24 +11,10 @@ const routes = require('./routes/api')
 const userRoutes = require('./routes/user')
 const donationsRoutes = require('./routes/donations')
 
-const HDWalletProvider = require('truffle-hdwallet-provider')
-const Web3 = require('web3')
-const seed = process.env.SEED
-const ropstenProvider = process.env.INFPROVIDER
-const provider = new HDWalletProvider(seed, ropstenProvider)
-const web3 = new Web3(provider)
-const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
+const aaveFunctions = require('./functions/aaveFunctions')
+const causesFunctions = require('./functions/causesFunctions')
 
-const mockDaiContractAbi = require('./contracts/MockDAI.json')
-const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
-const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
-const LendingPoolAddressesProviderABI = require ('./contracts/LendingPoolAddressesProvider.json')
-const LendingPoolABI = require ('./contracts/LendingPool.json')
-
-
-
-
-
+// const Batch = require('./models/batch')
 
 //Database connection
 const PORT = process.env.PORT || 8080
@@ -55,70 +42,63 @@ app.use('/', routes)
 app.use('/user', userRoutes)
 app.use('/donations', donationsRoutes)
 
+const HDWalletProvider = require('truffle-hdwallet-provider')
+const Web3 = require('web3')
+const seed = process.env.SEED
+const ropstenProvider = process.env.INFPROVIDER
+const provider = new HDWalletProvider(seed, ropstenProvider)
+const web3 = new Web3(provider)
+
+const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
+
+const mockDaiContractAbi = require('./contracts/MockDAI.json')
+const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
+const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
+
+async function test() {
+
+	// let batchToRetrieve = await causesFunctions.getBatchName()
+	
+	// //retrieve addresses and amounts
+	// let batchCauses = await causesFunctions.retrieveBatchCauses(batchToRetrieve)
+
+	// //total amount to redeem for this batch
+	// let totalAmount = await causesFunctions.calculateBatchTotal(batchCauses)
+
+	// console.log(totalAmount)
+	// let batchToRetrieve = await causesFunctions.getBatchName();
+	// let batchData = await causesFunctions.retrieveBatchData(batchToRetrieve)
+	// aaveFunctions.depositToLP()
+}
+
+test()
 //Timeout function for batch management
-// cron.schedule('* * 1,15 * *', () => {
-cron.schedule('9 * * * *', async () => {
-	//make a deposit to aave lending pool of all DAIs in app account
-	console.log("make a deposit to aave lending pool of all DAIs in app account")
-	const appMockDaiBalance = await mockDaiContractInstance.methods.balanceOf(irrigateAddress).call()
-	const appMockDaiBalanceinWei = appMockDaiBalance.toString()
-	console.log("appMockDaiBalanceinWei: ",appMockDaiBalanceinWei)
-	const referralCode = '0'
+// cron.schedule('* * 1,15 * *', async () => {
+cron.schedule('49 * * * *', async () => {
+	//get corresponding causes and their amount
+	let batchToRetrieve = await causesFunctions.getBatchName()
+	
+	//retrieve addresses and amounts
+	let batchCauses = await causesFunctions.retrieveBatchCauses(batchToRetrieve)
 
-	//Get the latest LendingPoolCore address
-	console.log("Get the latest LendingPoolCore address")
-	const lpAddressProviderAddress = '0x1c8756FD2B28e9426CDBDcC7E3c4d64fa9A54728' // mainnet address, for other addresses: https://docs.aave.com/developers/developing-on-aave/deployed-contract-instances
-	const lpAddressProviderContract = new web3.eth.Contract(LendingPoolAddressesProviderABI, lpAddressProviderAddress)
-	const lpCoreAddress = await lpAddressProviderContract.methods.getLendingPoolCore().call()
-    .catch((e) => {
-        throw Error(`Error getting lendingPool address: ${e.message}`)
-    })
-  console.log("lpCoreAddress :",lpCoreAddress)
-	console.log("lpCoreAddress from site: 0x4295ee704716950a4de7438086d6f0fbc0ba9472")
+	//total amount to redeem for this batch
+	let totalAmount = await causesFunctions.calculateBatchTotal(batchCauses)
 
-  //Approve the LendingPoolCore address with the DAI contract
-  console.log("Approve the LendingPoolCore address with the DAI contract")
-	await mockDaiContractInstance.methods
-    .approve(
-        lpCoreAddress,
-        appMockDaiBalanceinWei
-    )
-    .send({from: irrigateAddress})
-    .catch((e) => {
-        throw Error(`Error approving DAI allowance: ${e.message}`)
-    })
+	//redeem all the aDAIs to aave and get the DAIs back
+	await aaveFunctions.redeemADai(totalAmount)
+			
+	//transfer to each of them the correct amount
+	await aaveFunctions.transferToCauses(batchCauses)
 
-  //Get the latest LendingPool contract address
-  console.log("Get the latest LendingPool contract address")
-	const lpAddress = await lpAddressProviderContract.methods
-    .getLendingPool()
-    .call({from: irrigateAddress})
-    .catch((e) => {
-        throw Error(`Error getting lendingPool address: ${e.message}`)
-    })
-  console.log("lpAddress :",lpAddress)
-  console.log("lpAddress from site: 0x9e5c7835e4b13368fd628196c4f1c6cec89673fa")
+	//make a deposit to aave lending pool of all DAIs in app account	
+	await aaveFunctions.depositToLP()
+	
 
-  //Make the deposit transaction via LendingPool contract
-  console.log("Make the deposit transaction via LendingPool contract")
-	const lpContract = new web3.eth.Contract(LendingPoolABI, lpAddress)
-	await lpContract.methods
-    .deposit(
-        mockDaiContractAddress,
-        appMockDaiBalanceinWei,
-        referralCode
-    )
-    .send({from: irrigateAddress})
-    .catch((e) => {
-        throw Error(`Error depositing to the LendingPool contract: ${e.message}`)
-    })
-
-	//repay all the aDAIs to aave and get the DAIs back
-	//transfer the DAIs to corresponding causes
-	//keep interests needed for the app
-	//transfer remaining interests to the causes
-	//create new batch and insert it to mongodb 
 });
+
+//each 1 of the month:
+//deduct expenses from interests
+//transfer rest of interests
 
 
 //Start server
