@@ -103,7 +103,7 @@ class Stream extends Component {
 
 	render() {
 
-    console.log("Stream state: ", this.state)
+    // console.log("Stream state: ", this.state)
 		
     let Stream = (
       <div className="Stream">

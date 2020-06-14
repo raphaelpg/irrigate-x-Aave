@@ -3,13 +3,14 @@ const mongoose = require('mongoose')
 //Mongo Schema
 const Schema = mongoose.Schema
 const IrrigateCauseSchema = new Schema({
-	name: String,
+	name: String, 
 	description: String,
 	category: String,
 	continent: String,
 	country: String,
 	logoName: String,
 	address: String,
+	link: String,
 	date: {
 		type: String,
 		default: Date.now()

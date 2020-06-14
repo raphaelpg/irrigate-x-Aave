@@ -347,6 +347,16 @@ $causeFontColor: #454545;
   padding: 10px;
   border-radius: 8px;
   background: white;
+  -webkit-transition: .2s ease-in-out;
+  transition: .2s ease-in-out;
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  transition-property: box-shadow, transform;
+}
+.causeDisplay:hover{
+  box-shadow: 10px 10px 10px -10px rgba(0, 0, 0, 0.5);
+  -webkit-transform: scale(1.02);
+  transform: scale(1.02);
 }
 .causeLogoContainer{
   max-height: 180px;
@@ -367,6 +377,26 @@ $causeFontColor: #454545;
 .causeNumber{
   color: $irrigateBackground;
   font-weight: bold;
+}
+.addCauseToYourListButton{
+  margin: 0 auto;
+  padding: 0 0 0 0;
+  width: 100%;
+  height: 30px;
+  font-weight: bold;
+  background-color: $irrigateBackground;
+  color: $irrigateFontColor;
+  border: 1px solid $irrigateBackground;
+  border-radius: 15px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.5s;
+}
+.addCauseToYourListButton:hover{
+  cursor: pointer;
+  background-color: $irrigateFontColor;
+  color: $irrigateBackground;
+  border: 1px solid $irrigateBackground;
 }
 
 .Footer{
