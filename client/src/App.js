@@ -2,7 +2,6 @@ import React from 'react'
 import getWeb3 from './utils/getWeb3';
 import axios from 'axios'
 import './css/App.scss'
-// import Navbar from './components/Navbar'
 import MockDAI from './contracts/MockDAI.json'
 import HomeDescription from './components/HomeDescription'
 import FormAddCause from './components/FormAddCause'
@@ -12,7 +11,6 @@ import FormAddUser from './components/FormAddUser'
 import FormLogIn from './components/FormLogIn'
 import Stream from './components/Stream'
 import Logout from './components/Logout'
-// import { initiateWalletConnection } from './utils/web3Functions.js'
 const logo = require('./components/planet.png')
 
 class App extends React.Component {
@@ -37,10 +35,8 @@ class App extends React.Component {
     mockDaiAddress: '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108',
     mockDaiContract: null,
   }
-  // this.initiateWalletConnection = initiateWalletConnection.bind('this')
 
   componentDidMount = async () => {
-    // initiateWalletConnection()
     this.getIrrigateCauses()
     this.checkSessionStorage()
     this.getUserData()
@@ -76,6 +72,10 @@ class App extends React.Component {
     }
   }
 
+  async saveUserCauses() {
+
+  }
+
   async getUserData() {
     try {
       if (sessionStorage.getItem('userAuth') === 'true') {
@@ -83,7 +83,8 @@ class App extends React.Component {
         const userToken = sessionStorage.getItem('userToken')
 
         const payload = new FormData()
-        payload.append('email', userEmail)      
+        payload.append('email', userEmail)
+
         let config = {
           headers: {
             Authorization: 'Bearer ' + userToken
@@ -93,14 +94,13 @@ class App extends React.Component {
         axios.post('/user/data', payload, config)
           .then((response) => {
             const data = response.data
-            // console.log("userData: ", data[0])
-            // console.log("userData: streamAmount ", data[0].streamAmount)
             this.setState({
               currentStreamAmount: data[0].streamAmount,
               userCausesId: data[0].subscribedCauses
             })
-            // this.setState({ userCauses: data })
-            this.getUserCauses()
+            if (data[0].subscribedCauses.length > 0) {
+              this.getUserCauses()
+            }
           })
           .catch(() => {
             console.log('Error retrieving user causes list')
@@ -112,8 +112,15 @@ class App extends React.Component {
   }
 
   addCauseToUserList = ({ target }) => {
-    console.log(target.name)
     this.state.userCausesId.push(target.name)
+    this.getUserCauses()
+  }
+
+  removeCauseFromUserList = ({ target }) => {
+    const causeIndex = this.state.userCausesId.indexOf(target.name);
+    if (causeIndex > -1) {
+      this.state.userCausesId.splice(causeIndex, 1);
+    }
     this.getUserCauses()
   }
 
@@ -122,6 +129,7 @@ class App extends React.Component {
       const payload = new FormData()
       const userToken = sessionStorage.getItem('userToken')
       payload.append('causesId', this.state.userCausesId)
+      payload.append('userEmail', sessionStorage.getItem('userEmail'))
 
       let config = {
         headers: {
@@ -151,9 +159,6 @@ class App extends React.Component {
 
       await web3.eth.net.getNetworkType((err, network) => {
         this.setState({network: network})
-        // if (network !== "ropsten"){
-        //   alert(`Switch your wallet network to Ropsten testnet`);
-        // }
       })
       const accounts = await web3.eth.getAccounts()
       const instanceDAI = new web3.eth.Contract(
@@ -184,7 +189,6 @@ class App extends React.Component {
 
     let FormUserConnected = (
       <div className="NavbarRightCorner">
-        {/*<button className="displayFormAddUserButton description" onClick={(e) => this.setState({ displayStream:true })}>Manage your stream</button>*/}
         <button className="displayFormAddUserButton description" onClick={ this.displayStreamAndConnectWallet }>Manage your stream</button>
         <Logout checkSessionStorage={ this.checkSessionStorage } />
       </div>
@@ -219,13 +223,15 @@ class App extends React.Component {
             />
             <Stream
               displayStream={ this.state.displayStream } 
-              closeStream={(e) => this.setState({ displayStream:false })}
-              userCauses={this.state.userCauses}
-              currentStreamAmount={this.state.currentStreamAmount}
-              getUserData={this.getUserData}
+              closeStream={ (e) => this.setState({ displayStream:false }) }
+              userCauses={ this.state.userCauses }
+              currentStreamAmount={ this.state.currentStreamAmount }
+              getUserData={ this.getUserData }
               irrigateAddress={ this.state.irrigateAddress }
               accounts={ this.state.accounts }
               mockDaiContract={ this.state.mockDaiContract }
+              userCausesId={ this.state.userCausesId }
+              removeCauseFromUserList={ this.removeCauseFromUserList }
             />
           </div>
         </div> 

@@ -42,27 +42,21 @@ app.use('/', routes)
 app.use('/user', userRoutes)
 app.use('/donations', donationsRoutes)
 
-const HDWalletProvider = require('truffle-hdwallet-provider')
-const Web3 = require('web3')
-const seed = process.env.SEED
-const ropstenProvider = process.env.INFPROVIDER
-const provider = new HDWalletProvider(seed, ropstenProvider)
-const web3 = new Web3(provider)
 
-const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
-
-const mockDaiContractAbi = require('./contracts/MockDAI.json')
-const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
-const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
 
 async function test() {
 
-	// await aaveFunctions.depositToLP()
 }
 
 test()
+
 //Timeout function for batch management
-cron.schedule('* * 1,15 * *', async () => {
+cron.schedule('1 0 1,15 * *', async () => {
+	//get new batch name
+	newBatchName = await causesFunctions.getNewBatchName()
+	//create new batch
+	await causesFunctions.createNewBatch(newBatchName)
+
 	//get corresponding causes and their amount
 	let batchToRetrieve = await causesFunctions.getBatchName()
 	
@@ -80,8 +74,6 @@ cron.schedule('* * 1,15 * *', async () => {
 
 	//make a deposit to aave lending pool of all DAIs in app account	
 	await aaveFunctions.depositToLP()
-	
-
 });
 
 //each 1 of the month:

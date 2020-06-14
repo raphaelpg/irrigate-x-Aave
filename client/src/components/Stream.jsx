@@ -12,7 +12,7 @@ class Stream extends Component {
 	}
 
   componentDidMount = () => {
-    
+    console.log(this.props.userCausesId)
   }
 
   handleChange = ({ target }) => {
@@ -24,6 +24,7 @@ class Stream extends Component {
     if (!userCauses) return null
     return userCauses.map( (cause, index) => (
       <div className="causeDisplay" key={index}>
+        <button className="closeUserCauseButton" name={cause._id} onClick={this.props.removeCauseFromUserList}>x</button>
         <div className="causeLogoContainer">
           <img className="causeLogo" src={cause.logoName} alt={cause.name} />
         </div>
@@ -40,7 +41,6 @@ class Stream extends Component {
     const userToken = sessionStorage.getItem('userToken')
     payload.append('email', userEmail)
     payload.append('newStreamAmount', this.state.newStreamAmount)
-    // payload.append('newStreamAmount', this.state.setStreamAmount)
 
     let config = {
       headers: {
@@ -60,45 +60,35 @@ class Stream extends Component {
 
   donateOnce = async (event) => {
     event.preventDefault()
-    const web3 = await getWeb3();
-    const { irrigateAddress, accounts, mockDaiContract } = this.props
-    const getBalance = await mockDaiContract.methods.balanceOf(accounts[0]).call()
-    const userBalance = parseInt(getBalance)
-    const userDonation = web3.utils.toWei(this.state.donateOnceAmount, "ether").toString()
-    // const daiAmountinWei = web3.utils.toWei("1000", "ether").toString()
-    console.log(userBalance)
-    console.log(typeof(userBalance))
-    console.log(userDonation)
-    console.log(typeof(userDonation))
-    if (userBalance >= userDonation) {
-      console.log("ok to transfer")
-      await mockDaiContract.methods.transfer(irrigateAddress, userDonation).send({from: accounts[0]})
-      .then(() => {
-        const payload = new FormData()
-        payload.append('amount', userDonation)
-        payload.append('causeAddress', '0x9730566588BFb9d3b8A8d6e0630F1e629399CB39')
-        
-        axios.post("/donations/donateOnce", payload)
-          .then(() => {
-            console.log('Donation sent')
-            // this.props.getUserData()
-          })
-          .catch(() => {
-            console.log('Internal server error')
-          })
-      })
-      //inform server that user X have sent amount Y to causes 1, 2 , 3 ...
-      // const userEmail = sessionStorage.getItem('userEmail')
-      // const userToken = sessionStorage.getItem('userToken')
-      // payload.append('gavedAmount', this.state.donateOnceAmount)
-
-      // let config = {
-      //   headers: {
-      //     Authorization: 'Bearer ' + userToken
-      //   }
-      // }
-
-    } else alert("Unsufficient DAI balance")
+    if (this.props.userCausesId.length < 1) {
+      alert("Add a cause to your list first")
+      return
+    } else {
+      const web3 = await getWeb3();
+      const { userCausesId, irrigateAddress, accounts, mockDaiContract } = this.props
+      const getBalance = await mockDaiContract.methods.balanceOf(accounts[0]).call()
+      const userBalance = parseInt(getBalance)
+      const userDonation = web3.utils.toWei(this.state.donateOnceAmount, "ether").toString()
+      if (userBalance >= userDonation) {
+        await mockDaiContract.methods.transfer(irrigateAddress, userDonation).send({from: accounts[0]})
+        .then(() => {
+          const payload = new FormData()
+          payload.append('amount', userDonation)
+          payload.append('causeAddress', userCausesId[0])
+          
+          axios.post("/donations/donateOnce", payload)
+            .then(() => {
+              alert('Success ! Donation sent !')
+            })
+            .catch(() => {
+              console.log('Internal server error')
+            })
+        })
+        .catch(() => {
+          console.log("Transfer failed")
+        })
+      } else alert("Unsufficient DAI balance")
+    }
   }
 
 	render() {
@@ -123,7 +113,7 @@ class Stream extends Component {
               <input 
                 name="donateOnceAmount" 
                 type="number" 
-                min="1"
+                min="5"
                 step="5"
                 placeholder="0"
                 onChange={this.handleChange} 

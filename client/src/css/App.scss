@@ -301,6 +301,19 @@ $causeFontColor: #454545;
 .setStreamForm * {
   margin: 0;
 }
+.userCausesContainer{
+  display: flex;
+}
+.closeUserCauseButton{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: grey;
+}
 .donateOnceForm{
   display: flex;
   flex-direction: row;
@@ -310,6 +323,12 @@ $causeFontColor: #454545;
 .donateOnceForm * {
   margin: 0;
   padding: 0;
+}
+.donateOnceContainer{
+  border-top: 1px solid green;
+  border-bottom: 1px solid green;
+  margin: 30px 0 0 0;
+  padding: 10px 0 10px 0;
 }
 
 .irrigateCausesList{

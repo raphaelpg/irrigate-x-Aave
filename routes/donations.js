@@ -21,6 +21,22 @@ const mockDaiContractAbi = require('../contracts/MockDAI.json')
 const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
 const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
 
+function getCurrentBatchName() {
+	let currentDate = new Date()
+	let currentYear = currentDate.getFullYear()
+	let currentMonth = currentDate.getMonth()
+	let currentDay = currentDate.getDate()
+	if (currentDay < 15) {
+		let batchName = currentYear + '_' + (currentMonth+1) + '_A'
+		console.log("batchName: ", batchName)
+		return batchName 
+	} else {
+		let batchName = currentYear + '_' + (currentMonth+1) + '_B'
+		console.log("batchName: ", batchName)
+		return batchName
+	}
+}
+
 router.post('/donateOnce', (req, res, next) => {
 	upload(req, res, async function(err) {
 		if (err instanceof multer.MulterError) {
@@ -30,7 +46,8 @@ router.post('/donateOnce', (req, res, next) => {
 		}
 		const receivedAmount = parseInt(req.body.amount)/Math.pow(10, 18)
 		const causeAddress = req.body.causeAddress
-		const currentBatch = "1"
+		const currentBatch = await getCurrentBatchName()
+
 		let collection = mongoose.connection.collection('donations')
 		collection.find({ batch: currentBatch }).toArray((err, data) => {
 			if (err) {
@@ -39,9 +56,12 @@ router.post('/donateOnce', (req, res, next) => {
 				})
 			}
 			if (data[0].causes[causeAddress]) {
-				const newAmount = data[0].causes[causeAddress] + receivedAmount
-			  const myquery = { batch: currentBatch }
-			  const newvalues = { $set: {causes: {[causeAddress]: newAmount}} }
+				console.log("cause found in current batch")
+				const newAmount = parseInt(data[0].causes[causeAddress]) + receivedAmount
+				let newData = data
+				newData[0].causes[causeAddress] = newAmount.toString()
+			  const myquery = { "batch": currentBatch }
+			  const newvalues = { $set: {"causes": newData[0].causes }}
 			  collection.updateOne(myquery, newvalues, function(err, response) {
 				  if (err) {
 						console.log(err)
@@ -49,13 +69,18 @@ router.post('/donateOnce', (req, res, next) => {
 							error: err
 						})
 					}
+					console.log("funds added")
 					return res.status(201).json({
 						message: 'amount added to causes fund'
 					})
 				})
 			} else {
-				const myquery = { batch: currentBatch }
-			  const newvalues = { $set: {causes: {[causeAddress]: receivedAmount}} }
+				console.log("cause not found in current batch, creating")
+				let newData = data
+				newData[0].causes[causeAddress] = receivedAmount.toString()
+				const myquery = { "batch": currentBatch }
+			  const newvalues = { $set: {"causes": newData[0].causes} }
+			  // updateOne({"_id" : ObjectId("0123456789abcdef01234567")}, {$set: { "my_test_key4" : 4}})
 			  collection.updateOne(myquery, newvalues, function(err, response) {
 			  	if (err) {
 						console.log(err)
@@ -63,6 +88,7 @@ router.post('/donateOnce', (req, res, next) => {
 							error: err
 						})
 					}
+					console.log("cause and funds added")
 					return res.status(201).json({
 						message: 'cause and fund created'
 					})

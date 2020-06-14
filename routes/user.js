@@ -162,6 +162,8 @@ router.post('/causes', checkAuth, async (req, res) => {
 		} else if (err) {
 			return res.status(500).json(err)
 		}
+		console.log(req.body.causesId)
+		console.log(req.body.userEmail)
 
 		let reqCausesBuild = {$or: []}
 		let causesArray = req.body.causesId.split(",")
@@ -169,9 +171,11 @@ router.post('/causes', checkAuth, async (req, res) => {
 			let inputId = mongoose.Types.ObjectId(causesArray[i])
 			reqCausesBuild.$or.push({"_id": inputId})
 		}
+		// let usersCollection = mongoose.connection.collection('users')
+		// usersCollection.updateOne( {'email': req.body.userEmail }, { $push: {"subscribedCauses": req.body.causesId[0]} })
 
-		let collection = mongoose.connection.collection('causes')
-		collection.find( reqCausesBuild ).toArray((err, data) => {
+		let causesCollection = mongoose.connection.collection('causes')
+		causesCollection.find( reqCausesBuild ).toArray((err, data) => {
 			if (err) throw err
 			res.json(data)
 		})

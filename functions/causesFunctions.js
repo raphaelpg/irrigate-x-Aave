@@ -11,9 +11,19 @@ module.exports = {
 		let currentMonth = currentDate.getMonth()
 		let currentDay = currentDate.getDate()
 		if (currentDay < 15) {
-			let batchName = currentYear + '_' + (currentMonth-1) + '_B'
-			console.log("batchName: ", batchName)
-			return batchName
+			if (currentMonth === 1) {
+				let batchName = currentYear + '_' + (11) + '_B'
+				console.log("batchName: ", batchName)
+				return batchName	
+			} else if (currentMonth === 2) {
+				let batchName = currentYear + '_' + (12) + '_B'
+				console.log("batchName: ", batchName)
+				return batchName
+			} else {
+				let batchName = currentYear + '_' + (currentMonth-1) + '_B'
+				console.log("batchName: ", batchName)
+				return batchName
+			}
 		} else {
 			let batchName = currentYear + '_' + (currentMonth) + '_A'
 			console.log("batchName: ", batchName)
@@ -34,6 +44,46 @@ module.exports = {
 			totalAmount = totalAmount + parseInt(batchCauses[address])
 		}
 		return totalAmount.toString()
-	}
+	},
 
+	getNewBatchName: async function () {
+		console.log('createNewBatch started')
+		let currentDate = new Date()
+		let currentYear = currentDate.getFullYear()
+		let currentMonth = currentDate.getMonth()
+		let currentDay = currentDate.getDate()
+
+		if (currentDay < 15) {
+				let newBatchName = currentYear + '_' + (currentMonth+1) + '_B'
+				console.log("newBatchName: ", newBatchName)
+				return newBatchName
+		} else {
+			if (currentMonth === 11) {
+				let newBatchName = (currentYear+1) + '_' + (1) + '_A'
+				console.log("newBatchName: ", newBatchName)
+				return newBatchName
+			} else {
+				let newBatchName = currentYear + '_' + (currentMonth+2) + '_A'
+				console.log("newBatchName: ", newBatchName)
+				return newBatchName
+			}
+		}
+	},
+
+	createNewBatch: async function (newBatchName) {
+		const batch = new Batch({
+			_id: new mongoose.Types.ObjectId(),
+			batch: newBatchName,
+			causes: {
+				"cause address": "0"
+			}
+		})
+		let collection = mongoose.connection.collection('donations')
+		collection.insertOne(batch, (error, result) => {
+			if (error) {
+				console.log(error)
+			}
+			console.log("New batch ", newBatchName, " created")
+		})
+	}
 }

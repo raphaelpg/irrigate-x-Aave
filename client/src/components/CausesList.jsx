@@ -5,8 +5,9 @@ class CausesList extends Component {
   constructor(props){
     super(props);
     this.state = {
-      filter: ''
+      filter: 'All'
     };
+  // this.displayIrrigateCauses = this.displayIrrigateCauses.bind(this)
   }
 
 	componentDidMount = () => {
@@ -15,25 +16,50 @@ class CausesList extends Component {
 
   displayIrrigateCauses = (causes) => {
     if (!causes) return null
-    return causes.map( (cause, index) => (
-      <div className="causeDisplay" key={index}>
-        <div className="causeLogoContainer">
-          <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+    if (this.state.filter === 'All') {
+      return causes.map( (cause, index) => (
+        <div className="causeDisplay" key={index}>
+          <div className="causeLogoContainer">
+            <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+          </div>
+          <h3>{cause.name}</h3>
+          <p>{cause.category}</p>
+          <p>Activity's location: {cause.continent}, {cause.country}</p>
+          <p>{cause.description}</p>
+          <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
+          <p className="causeNumber">Monthly donors: 2000 persons</p>
+          <p className="causeNumber">Monthly donations: 1500 DAI</p>
+          <p className="causeNumber">Total funds raised: 23500 DAI</p>
+          <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
+          {/*<p>{cause.address}</p>*/}
         </div>
-        <h3>{cause.name}</h3>
-        <p>{cause.category}</p>
-        <p>Activity's location: {cause.continent}, {cause.country}</p>
-        <p>{cause.description}</p>
-        <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
-        {/*<a href="/localhost:8080">Website</a>*/}
-        <p className="causeNumber">Monthly donors: 2000 persons</p>
-        <p className="causeNumber">Monthly donations: 1500 DAI</p>
-        <p className="causeNumber">Total funds raised: 23500 DAI</p>
-        <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
-        {/*<p>{cause.address}</p>*/}
-      </div>
-    ))
+      ))
+    }
+    else {
+      let result = causes.filter(cause => {
+        return cause.category === this.state.filter
+      })  
+      return result.map( (cause, index) => (
+        <div className="causeDisplay" key={index}>
+          <div className="causeLogoContainer">
+            <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+          </div>
+          <h3>{cause.name}</h3>
+          <p>{cause.category}</p>
+          <p>Activity's location: {cause.continent}, {cause.country}</p>
+          <p>{cause.description}</p>
+          <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
+          <p className="causeNumber">Monthly donors: 2000 persons</p>
+          <p className="causeNumber">Monthly donations: 1500 DAI</p>
+          <p className="causeNumber">Total funds raised: 23500 DAI</p>
+          <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
+          {/*<p>{cause.address}</p>*/}
+        </div>
+      ))  
+    }
   }
+
+  
 
   // addCauseToUserList = ({ target }) => {
   //   console.log(target.name)
@@ -46,18 +72,17 @@ class CausesList extends Component {
 
   handleCategoryClick = ({ target }) => {
     this.setState({ filter: target.innerHTML})
-    console.log(this.state.filter)
   }
 
 	render() {
-    console.log("Stream state: ", this.state)
+    // console.log("Stream state: ", this.state)
 		return (
 			<div className="irrigateCausesList">
         <div className="causesListFilterContainer">
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >All</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Animal Protection</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Child Protection</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Disease Fight</p>
+          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Development</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Ecology</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Education</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Human Rights</p>

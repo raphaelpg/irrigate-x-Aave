@@ -35,6 +35,7 @@ class FormLogIn extends Component {
         console.log(error)
       }
     )
+    this.props.closeFormLogIn()
   }
 
   resetSignupInputs = () => {
