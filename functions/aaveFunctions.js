@@ -31,42 +31,64 @@ module.exports = {
 		const referralCode = '0'
 
 		//Get the latest LendingPoolCore address
-		const lpCoreAddress = await lpAddressProviderContract.methods.getLendingPoolCore().call()
+		async function getLpCoreAddress() {
+			return await lpAddressProviderContract.methods.getLendingPoolCore().call()
 	    .catch((e) => {
-	        throw Error(`Error getting lendingPool address: ${e.message}`)
+        // throw Error(`Error getting lendingPool address: ${e.message}`)
+        console.log(`Error getting lendingPool address: ${e.message}`)
+        console.log('Trying again')
+	  		lpCoreAddress()
 	    })
+	  }
+	  const lpCoreAddress = await getLpCoreAddress()
 
 	  //Approve the LendingPoolCore address with the DAI contract
-		await mockDaiContractInstance.methods
+		async function approveLpCoreAddress() {
+			await mockDaiContractInstance.methods
 	    .approve(
 	        lpCoreAddress,
 	        appMockDaiBalanceinWei
 	    )
 	    .send({from: irrigateAddress})
 	    .catch((e) => {
-	        throw Error(`Error approving DAI allowance: ${e.message}`)
+	      console.log(`Error approving DAI allowance: ${e.message}`)
+        console.log('Trying again')
+        approveLpCoreAddress()
 	    })
+	  }
+	  await approveLpCoreAddress()
 
 	  //Get the latest LendingPool contract address
-		const lpAddress = await lpAddressProviderContract.methods
+		async function getLendingPoolAddress() {
+			return await lpAddressProviderContract.methods
 	    .getLendingPool()
 	    .call({from: irrigateAddress})
 	    .catch((e) => {
-	        throw Error(`Error getting lendingPool address: ${e.message}`)
+	      console.log(`Error getting lendingPool address: ${e.message}`)
+        console.log('Trying again')
+        getLendingPoolAddress()
 	    })
+	  } 
+	  const lpAddress = await getLendingPoolAddress()
 
 	  //Make the deposit transaction via LendingPool contract
 		const lpContract = new web3.eth.Contract(LendingPoolABI, lpAddress)
-		await lpContract.methods
+		async function depositAllDai() {
+			await lpContract.methods
 	    .deposit(
-	        mockDaiContractAddress,
-	        appMockDaiBalanceinWei,
-	        referralCode
+        mockDaiContractAddress,
+        appMockDaiBalanceinWei,
+        referralCode
 	    )
 	    .send({from: irrigateAddress})
 	    .catch((e) => {
-	        throw Error(`Error depositing to the LendingPool contract: ${e.message}`)
+        console.log(`Error depositing to the LendingPool contract: ${e.message}`)
+        console.log('Trying again')
+        depositAllDai()
 	    })
+	  }
+	  await depositAllDai()
+
 	  console.log("deposit successful")
 	},
 
@@ -74,22 +96,37 @@ module.exports = {
 		console.log("redeemADai function started")
 		const amountInWei = web3.utils.toWei(amoutToRedeem, "ether").toString()
 
-		await aDaiContract.methods
+		async function redeem() {
+			await aDaiContract.methods
 	    .redeem(amountInWei)
 	    .send({from: irrigateAddress})
 	    .catch((e) => {
-	        throw Error(`Error redeeming aDai: ${e.message}`)
+	      console.log(`Error redeeming aDai: ${e.message}`)
+        console.log('Trying again')
+        redeem()
 	    })
-	  const daiBalance = await mockDaiContractInstance.methods.balanceOf(irrigateAddress).call()
+	  }
+	  await redeem()
 	  console.log("redeem successful")
 	}, 
 
 	transferToCauses: async function(addressesArray) {
 		console.log("Transfer to causes started")
+
+		async function transferToOneCause(causeAddress, causeAddressAmount) {
+		  	await mockDaiContractInstance.methods.transfer(causeAddress, causeAddressAmount).send({from: irrigateAddress})
+		  	.catch((e) => {
+		      console.log(`Error transfering Dai: ${e.message}`)
+	        console.log('Trying again')
+	        transferToOneCause()
+		    })
+		  }
+
 		for (address in addressesArray) {
 			const addressAmount = web3.utils.toWei(addressesArray[address], "ether").toString()
-		  console.log("Transfer ",addressAmount, "DAI to ", address)
-		  await mockDaiContractInstance.methods.transfer(address, addressAmount).send({from: irrigateAddress})
+		  console.log("Transfering ",addressAmount, "DAI to ", address)
+		  
+		  await transferToOneCause(address, addressAmount)
 		}
 		console.log("All transfers to causes ended")
 	}

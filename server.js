@@ -57,24 +57,12 @@ const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDa
 
 async function test() {
 
-	// let batchToRetrieve = await causesFunctions.getBatchName()
-	
-	// //retrieve addresses and amounts
-	// let batchCauses = await causesFunctions.retrieveBatchCauses(batchToRetrieve)
-
-	// //total amount to redeem for this batch
-	// let totalAmount = await causesFunctions.calculateBatchTotal(batchCauses)
-
-	// console.log(totalAmount)
-	// let batchToRetrieve = await causesFunctions.getBatchName();
-	// let batchData = await causesFunctions.retrieveBatchData(batchToRetrieve)
-	// aaveFunctions.depositToLP()
+	// await aaveFunctions.depositToLP()
 }
 
 test()
 //Timeout function for batch management
-// cron.schedule('* * 1,15 * *', async () => {
-cron.schedule('49 * * * *', async () => {
+cron.schedule('* * 1,15 * *', async () => {
 	//get corresponding causes and their amount
 	let batchToRetrieve = await causesFunctions.getBatchName()
 	
