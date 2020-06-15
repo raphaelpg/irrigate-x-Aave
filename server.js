@@ -13,6 +13,7 @@ const donationsRoutes = require('./routes/donations')
 
 const aaveFunctions = require('./functions/aaveFunctions')
 const causesFunctions = require('./functions/causesFunctions')
+const interestsFunctions = require('./functions/interestsFunctions')
 
 // const Batch = require('./models/batch')
 
@@ -42,44 +43,60 @@ app.use('/', routes)
 app.use('/user', userRoutes)
 app.use('/donations', donationsRoutes)
 
-
-
-async function test() {
-
-}
-
-test()
-
-//Timeout function for batch management
+//Function for batch time management, launched each 1st and 15th of every month at 00h01:
 cron.schedule('1 0 1,15 * *', async () => {
-	//get new batch name
-	newBatchName = await causesFunctions.getNewBatchName()
-	//create new batch
-	await causesFunctions.createNewBatch(newBatchName)
+	//1.Create new batch to register causes donations
+		//get new batch name
+		const newBatchName = await causesFunctions.getNewBatchName()
+		//create new batch
+		await causesFunctions.createNewBatch(newBatchName)
 
-	//get corresponding causes and their amount
-	let batchToRetrieve = await causesFunctions.getBatchName()
-	
-	//retrieve addresses and amounts
-	let batchCauses = await causesFunctions.retrieveBatchCauses(batchToRetrieve)
+	//2.Retrieve batch from 6 weeks ago to redistribute donations
+		//get corresponding causes and their amount
+		const batchToRetrieve = await causesFunctions.getBatchName()
+		//retrieve addresses and amounts
+		const batchCauses = await causesFunctions.retrieveBatchCauses(batchToRetrieve)
+		//total amount to redeem for this batch
+		const totalAmount = await causesFunctions.calculateBatchTotal(batchCauses)
 
-	//total amount to redeem for this batch
-	let totalAmount = await causesFunctions.calculateBatchTotal(batchCauses)
-
-	//redeem all the aDAIs to aave and get the DAIs back
+	//3.Redeem all the aDAIs to aave and get the DAIs back
 	await aaveFunctions.redeemADai(totalAmount)
 			
-	//transfer to each of them the correct amount
+	//4.Transfer to each cause the correct amount
 	await aaveFunctions.transferToCauses(batchCauses)
 
-	//make a deposit to aave lending pool of all DAIs in app account	
+	//5.Make a deposit to aave lending pool of all DAIs in app account	
 	await aaveFunctions.depositToLP()
 });
 
-//each 1 of the month:
-//deduct expenses from interests
-//transfer rest of interests
+//Function for interests management, launched each 1st of every month at 01h01:
+cron.schedule('1 1 1 * *', async () => {
+	const interestsBalance = await interestsFunctions.getInterestsAmount()
 
+	interestsFunctions.getMonthParameters().then(async function(monthNeeds) {
+		
+		if (monthNeeds < interestsBalance) {
+			console.log("enough and redistribute, ", monthNeeds , "<", interestsBalance)
+			//Retrieve batch from 6 weeks ago to redistribute donations
+			//get corresponding causes and their amount
+			const batchToRetrieve = await causesFunctions.getBatchName()
+			//retrieve addresses and amounts
+			const batchCauses = await causesFunctions.retrieveBatchCauses(batchToRetrieve)
+			//transfer monthneeds to app
+
+			//redistribute rest to causes TBD
+
+		} else {
+			console.log("not enough interests, ", monthNeeds , ">", interestsBalance)
+				await interestsFunctions.redeemInterests(interestsBalance.toString())
+				await interestsFunctions.transferAllDaiToApp()
+		}
+
+	}, function(err) {
+	  console.error('The promise was rejected', err, err.stack);
+	});
+
+})
 
 //Start server
 app.listen(PORT, console.log(`Server listening on ${PORT}`))

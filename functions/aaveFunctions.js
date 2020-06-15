@@ -6,6 +6,7 @@ const provider = new HDWalletProvider(seed, ropstenProvider)
 const web3 = new Web3(provider)
 
 const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
+const irrigateInterestsAddress = '0xcFAe9CA007993F277943f318eB99334664162201'
 
 const mockDaiContractAbi = require('../contracts/MockDAI.json')
 const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
@@ -89,7 +90,6 @@ module.exports = {
 	  }
 	  await depositAllDai()
 
-	  console.log("deposit successful")
 	},
 
 	redeemADai: async function(amoutToRedeem) {
@@ -107,7 +107,6 @@ module.exports = {
 	    })
 	  }
 	  await redeem()
-	  console.log("redeem successful")
 	}, 
 
 	transferToCauses: async function(addressesArray) {
@@ -129,6 +128,19 @@ module.exports = {
 		  await transferToOneCause(address, addressAmount)
 		}
 		console.log("All transfers to causes ended")
+	},
+
+	redirectInterests: async function() {
+		console.log("redirectInterests started")
+		// redirect interest stream to a different address
+		const to = irrigateInterestsAddress
+		await aDaiContract.methods
+		    .redirectInterestStream(to)
+		    .send({from: irrigateAddress})
+		    .catch((e) => {
+		        throw Error(`Error redeeming Dai: ${e.message}`)
+		    })
+		console.log("redirectInterests ended")
 	}
 
 }
