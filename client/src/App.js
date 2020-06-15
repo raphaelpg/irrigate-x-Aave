@@ -39,7 +39,6 @@ class App extends React.Component {
   componentDidMount = async () => {
     this.getIrrigateCauses()
     this.checkSessionStorage()
-    this.getUserData()
   }
 
   async getIrrigateCauses() {
@@ -58,12 +57,14 @@ class App extends React.Component {
   }
 
   checkSessionStorage = async () => {
+    console.log('checkSessionStorage started')
     try {
         const sessionUserAuth = await sessionStorage.getItem('userAuth')
         const sessionUserToken = await sessionStorage.getItem('userToken')
         this.setState({ userAuth: sessionUserAuth, userToken: sessionUserToken })
         if (sessionUserAuth === 'true') {
           this.setState({ userStatus: 'Connected' })
+          this.getUserData()
         } else {
           this.setState({ userStatus: '' })
         }
@@ -99,6 +100,7 @@ class App extends React.Component {
   }
 
   async getUserData() {
+    console.log("getuserdata started")
     try {
       if (sessionStorage.getItem('userAuth') === 'true') {
         const userEmail = sessionStorage.getItem('userEmail')
@@ -149,6 +151,7 @@ class App extends React.Component {
   }
 
   async getUserCauses() {
+    console.log("getUserCauses started")
     try {
       const payload = new FormData()
       const userToken = sessionStorage.getItem('userToken')
@@ -241,9 +244,10 @@ class App extends React.Component {
             />
             <FormLogIn 
               displayFormLogIn={ this.state.displayFormLogIn } 
-              closeFormLogIn={(e) => this.setState({ displayFormLogIn:false })}
-              checkSessionStorage={ this.checkSessionStorage }
-              getUserData={ this.getUserData }
+              closeFormLogIn={(e) => {
+                this.setState({ displayFormLogIn:false })
+                this.checkSessionStorage()
+              }}
             />
             <Stream
               displayStream={ this.state.displayStream } 

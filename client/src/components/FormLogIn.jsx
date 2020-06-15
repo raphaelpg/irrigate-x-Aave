@@ -15,21 +15,19 @@ class FormLogIn extends Component {
     this.setState({ [name]: value })
   }
 
-	logUser = (event) => {
+	logUser = async (event) => {
     event.preventDefault()
     const payload = new FormData()
 
     payload.append('email', this.state.email)
     payload.append('password', this.state.password)
 
-    axios.post("/user/login", payload)
+    await axios.post("/user/login", payload)
       .then((res) => {
         sessionStorage.setItem('userEmail', this.state.email)
         sessionStorage.setItem('userAuth', 'true');
         sessionStorage.setItem('userToken', res.data.token);
         this.resetSignupInputs()
-        this.props.checkSessionStorage()
-        this.props.getUserData()
       })
       .catch((error) => {
         console.log(error)
