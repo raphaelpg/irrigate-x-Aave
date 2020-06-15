@@ -11,10 +11,6 @@ class Stream extends Component {
 		};
 	}
 
-  componentDidMount = () => {
-    console.log(this.props.userCausesId)
-  }
-
   handleChange = ({ target }) => {
     const { name, value } = target
     this.setState({ [name]: value })
@@ -93,8 +89,6 @@ class Stream extends Component {
 
 	render() {
 
-    // console.log("Stream state: ", this.state)
-		
     let Stream = (
       <div className="Stream">
         <div className="StreamTitle_Close">

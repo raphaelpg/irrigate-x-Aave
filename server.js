@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const morgan = require('morgan')
 const path = require('path')
 const cron = require('node-cron')
-const moment = require('moment')
 require('dotenv').config()
 
 const app = express()

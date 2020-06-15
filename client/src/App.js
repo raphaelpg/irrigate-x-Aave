@@ -82,7 +82,6 @@ class App extends React.Component {
         const payload = new FormData()
         payload.append('email', userEmail)
         payload.append('userCausesId', this.state.userCausesId)
-        console.log(this.state.userCausesId)
         let config = {
           headers: {
             Authorization: 'Bearer ' + userToken
@@ -100,7 +99,6 @@ class App extends React.Component {
   }
 
   async getUserData() {
-    console.log("getuserdata started")
     try {
       if (sessionStorage.getItem('userAuth') === 'true') {
         const userEmail = sessionStorage.getItem('userEmail')
@@ -151,7 +149,6 @@ class App extends React.Component {
   }
 
   async getUserCauses() {
-    console.log("getUserCauses started")
     try {
       const payload = new FormData()
       const userToken = sessionStorage.getItem('userToken')
@@ -172,7 +169,6 @@ class App extends React.Component {
         })
         .catch((e) => {
           console.log(e)
-          console.log('Error retrieving causes list')
         })
     } catch (e) {
       console.log(e)
@@ -204,8 +200,6 @@ class App extends React.Component {
   }
 
   render() {
-
-    // console.log('App State: ', this.state)
 
     let FormAddUserButton = (
       <div className="NavbarRightCorner">

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import axios from 'axios'
 
 class Logout extends Component {
 	constructor(props){
@@ -11,12 +10,9 @@ class Logout extends Component {
 
 	logoutUser = (event) => {
     event.preventDefault()
-
     sessionStorage.setItem('userAuth', 'false');
     sessionStorage.removeItem('userToken');
     this.props.checkSessionStorage()
-    //remove token from authorization headers 
-    //axios post disable token ?
   }
 
 	render() {

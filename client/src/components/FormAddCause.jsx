@@ -26,7 +26,6 @@ class FormAddCause extends Component {
       logo: event.target.files[0]
     })
     let fileName = ''
-    console.log(document.getElementById('file-uploaded').value)
     fileName = document.getElementById('file-uploaded').value
     let fileNameParsed = fileName.split("\\")
     document.getElementById('file-selected').innerHTML = ' ' + fileNameParsed[fileNameParsed.length - 1]

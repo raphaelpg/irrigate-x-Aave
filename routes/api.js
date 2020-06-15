@@ -46,7 +46,7 @@ router.post('/save', function(req, res) {
 			logoName : req.file.path,
 		})
 
-		let collection = mongoose.connection.collection('causes')
+		let collection = mongoose.connection.collection('pendingCauses')
 		collection.insertOne(newIrrigateCause, (error) => {
 			if (error) {
 				res.status(500).json({ msg: 'Internal server error'})

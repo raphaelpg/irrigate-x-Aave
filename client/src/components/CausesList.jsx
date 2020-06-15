@@ -5,7 +5,6 @@ const education = require('./education.png')
 const environment = require('./environment.png')
 const health = require('./health.png')
 const human_rights = require('./human_rights.png')
-// import axios from 'axios'
 
 class CausesList extends Component {
   constructor(props){
@@ -13,11 +12,6 @@ class CausesList extends Component {
     this.state = {
       filter: 'All'
     };
-  // this.displayIrrigateCauses = this.displayIrrigateCauses.bind(this)
-  }
-
-	componentDidMount = () => {
-    // this.displayIrrigateCauses()
   }
 
   displayIrrigateCauses = (causes) => {
@@ -37,7 +31,6 @@ class CausesList extends Component {
           <p className="causeNumber">Monthly donations: 1500 DAI</p>
           <p className="causeNumber">Total funds raised: 23500 DAI</p>
           <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
-          {/*<p>{cause.address}</p>*/}
         </div>
       ))
     }
@@ -59,17 +52,10 @@ class CausesList extends Component {
           <p className="causeNumber">Monthly donations: 1500 DAI</p>
           <p className="causeNumber">Total funds raised: 23500 DAI</p>
           <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
-          {/*<p>{cause.address}</p>*/}
         </div>
       ))  
     }
   }
-
-  
-
-  // addCauseToUserList = ({ target }) => {
-  //   console.log(target.name)
-  // }
 
   handleChange = ({ target }) => {
     const { name, value } = target
@@ -85,7 +71,6 @@ class CausesList extends Component {
   }
 
 	render() {
-    // console.log("Stream state: ", this.state)
 		return (
 			<div className="irrigateCausesList">
         <div className="causesListFilterContainer">
