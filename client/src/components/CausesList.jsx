@@ -1,4 +1,10 @@
 import React, { Component } from 'react'
+const animal = require('./animal.png')
+const development = require('./development.png')
+const education = require('./education.png')
+const environment = require('./environment.png')
+const health = require('./health.png')
+const human_rights = require('./human_rights.png')
 // import axios from 'axios'
 
 class CausesList extends Component {
@@ -71,7 +77,11 @@ class CausesList extends Component {
   }
 
   handleCategoryClick = ({ target }) => {
-    this.setState({ filter: target.innerHTML})
+    if (target.innerHTML) {
+      this.setState({ filter: target.innerHTML})
+    } else {
+      this.setState({ filter: target.name})
+    }
   }
 
 	render() {
@@ -79,13 +89,33 @@ class CausesList extends Component {
 		return (
 			<div className="irrigateCausesList">
         <div className="causesListFilterContainer">
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >All</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Animal Protection</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Health</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Development</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Environment</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Education</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Human Rights</p>
+          <div className="filterAndLogoContainer">
+            <p className="causesListFilterName" onClick={this.handleCategoryClick} >All</p>
+          </div>
+          <div className="filterAndLogoContainer"  onClick={this.handleCategoryClick} >
+            <img className="causeFilterLogo" name="Animal Protection" src={animal} alt="animal logo"></img>
+            <p className="causesListFilterName" >Animal Protection</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+            <img className="causeFilterLogo" name="Health" src={health} alt="health logo"></img>
+            <p className="causesListFilterName" >Health</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+            <img className="causeFilterLogo" name="Development" src={development} alt="development logo"></img>
+            <p className="causesListFilterName" >Development</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+            <img className="causeFilterLogo" name="Environment" src={environment} alt="environment logo"></img>
+            <p className="causesListFilterName" >Environment</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+            <img className="causeFilterLogo" name="Education" src={education} alt="education logo"></img>
+            <p className="causesListFilterName" >Education</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+            <img className="causeFilterLogo" name="Human Rights" src={human_rights} alt="human_rights logo"></img>
+            <p className="causesListFilterName" >Human Rights</p>
+          </div>
         </div>
         <div className="causesListContainer">
           {this.displayIrrigateCauses(this.props.causes)}

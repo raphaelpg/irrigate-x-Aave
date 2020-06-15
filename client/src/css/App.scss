@@ -347,8 +347,24 @@ $causeFontColor: #454545;
   border-bottom: 1px solid grey;
 }
 .causesListFilterName:hover{
-  color: black;
+  color: $irrigateBackground;
   font-weight: bold;
+  cursor: pointer;
+}
+.filterAndLogoContainer{
+  display: flex;
+  flex-direction: row;
+  -webkit-transition: .2s ease-in-out;
+  transition: .2s ease-in-out;
+}
+.filterAndLogoContainer:hover{
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+.causeFilterLogo{
+  width: 35px;
+  height: 35px;
+  margin: auto 5px auto 0px;
   cursor: pointer;
 }
 .causesListContainer{
@@ -427,10 +443,16 @@ $causeFontColor: #454545;
 .FooterContainer{
   display: flex;
   height: 80px;
+  justify-content: center;
+}
+.FooterLogo{
+  width: 55px;
+  height: 55px;
+  margin: auto 0px;
 }
 .FooterDescription{
   font-weight: bolder;
-  margin: auto auto;
+  margin: auto 0px;
   display: flex;
 }
 .githubLogo{
