@@ -59,13 +59,34 @@ After the interests period of time, the batch containing the donations record is
 Every 1st day of the month, all the interests are redeemed and converted into DAIs.  
 Then, the total amount of interests earned is compared to last month expenses of the app: gas cost of all the transactions + server cost.
 After deduction of all the expenses, the remained amount of interest is transferred to the associations.  
-This last step have not been finished to be developed yet. 
+This last step has not been finished to be developed yet. 
 
 
 ## Security  
 
 This project is a prototype, it is not recommended to use it on the mainnet.  
 No smart contracts are used, only web3 calls are performed on ropsten.  
+
+
+## Improvements to be made:  
+
+### Short term:  
+* Possibility to add multiple categories by association/projects  
+* Display real time statistics of each projects data: total subscribers, total donations received   
+* Display real time app statistics: total amount redistributed, total interests earned and redistributed  
+* Develop multiple projects donations at one time, donation amount will be divided between all user's projects  
+* Develop monthly donation subscribtion  
+* Email implementation for user contact and registering  
+* Security validation for the forms  
+
+### Long term:  
+* Add GSN to reduce users gas cost when making donations  
+* Develop mobile app version  
+* Deploy smart contracts containing the code for transparency    
+* Allow connection with other wallets (currently Metamask only)  
+* Audit code and smart contracts  
+* Secure the app accounts with cold and multi-signature wallets  
+* Own logo and design
 
 
 ## Built With
