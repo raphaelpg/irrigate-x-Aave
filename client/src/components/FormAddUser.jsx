@@ -26,6 +26,8 @@ class FormAddUser extends Component {
       .then(() => {
         console.log('Sign up request sent to the server')
         this.resetSignupInputs()
+        this.props.closeFormAddUser()
+        alert('Your account has been created')
       })
       .catch(() => {
         console.log('Internal server error')

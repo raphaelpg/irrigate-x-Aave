@@ -10,6 +10,7 @@ const upload = multer ({  }).single('file')
 const checkAuth = require('../middleware/check-auth')
 require('dotenv').config()
 
+//Create user
 router.post('/signup', (req, res, next) => {
 	upload(req, res, function(err) {
 		if (err instanceof multer.MulterError) {
@@ -58,6 +59,7 @@ router.post('/signup', (req, res, next) => {
 	})
 })
 
+//User login
 router.post('/login', (req, res, next) => {
 	upload(req, res, function(err) {
 		if (err instanceof multer.MulterError) {
@@ -102,6 +104,7 @@ router.post('/login', (req, res, next) => {
 		})
 })
 
+//Update monthly donation amount
 router.post('/updateStreamAmount', checkAuth, (req, res, next) => {
 	upload(req, res, function(err) {
 		if (err instanceof multer.MulterError) {
@@ -124,6 +127,7 @@ router.post('/updateStreamAmount', checkAuth, (req, res, next) => {
 	})
 })
 
+//Save user project list
 router.post('/saveCauses', checkAuth, (req, res, next) => {
 	upload(req, res, function(err) {
 		if (err instanceof multer.MulterError) {
@@ -151,6 +155,7 @@ router.post('/saveCauses', checkAuth, (req, res, next) => {
 	})
 })
 
+//Delete user
 router.delete('/:userId', (req, res, next) => {
 	let collection = mongoose.connection.collection('users')
 	collection.deleteOne({ _id: req.params.userId }, (err, result) => {
@@ -167,6 +172,7 @@ router.delete('/:userId', (req, res, next) => {
 	})
 })
 
+//Send back user's data
 router.post('/data', checkAuth, (req, res, next) => {
 	upload(req, res, function(err) {
 		if (err instanceof multer.MulterError) {
@@ -182,6 +188,7 @@ router.post('/data', checkAuth, (req, res, next) => {
 	})
 })
 
+//Send back user's projects parameters for displaying
 router.post('/causes', checkAuth, async (req, res) => {
 	upload(req, res, function(err) {
 		if (err instanceof multer.MulterError) {
@@ -196,8 +203,6 @@ router.post('/causes', checkAuth, async (req, res) => {
 			let inputId = mongoose.Types.ObjectId(causesArray[i])
 			reqCausesBuild.$or.push({"_id": inputId})
 		}
-		// let usersCollection = mongoose.connection.collection('users')
-		// usersCollection.updateOne( {'email': req.body.userEmail }, { $push: {"subscribedCauses": req.body.causesId[0]} })
 
 		let causesCollection = mongoose.connection.collection('causes')
 		causesCollection.find( reqCausesBuild ).toArray((err, data) => {

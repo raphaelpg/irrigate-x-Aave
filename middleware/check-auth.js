@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
+//Authorization middleware, check if user is connected
 module.exports = (req, res, next) => {
 	try {
 		const token = req.headers.authorization.split(" ")[1]

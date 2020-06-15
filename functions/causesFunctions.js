@@ -3,7 +3,6 @@ const Batch = require('../models/batch')
 
 module.exports = {
 
-	// depositToLP: async function () {
 	getBatchName:	async function () {
 		console.log('getBatchName started')
 		let currentDate = new Date()

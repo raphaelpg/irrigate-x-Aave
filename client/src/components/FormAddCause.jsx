@@ -47,9 +47,10 @@ class FormAddCause extends Component {
 
     axios.post("/save", payload)
       .then(() => {
-        console.log('Data has been sent to the server')
+        alert('Your cause has been sent for validation')
         this.resetUserInputs()
         this.props.getIrrigateCauses()
+        this.props.closeFormAddCause()
       })
       .catch(() => {
         console.log('Internal server error')

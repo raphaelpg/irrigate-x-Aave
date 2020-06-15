@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const AppParams = require('../models/appParams')
+//Theses function are used to sign and make transaction from the second app address
 
 const HDWalletProvider = require('truffle-hdwallet-provider')
 const Web3 = require('web3')
@@ -8,6 +9,7 @@ const ropstenProvider = process.env.INFPROVIDER
 const provider = new HDWalletProvider(seed, ropstenProvider, 1)
 const web3 = new Web3(provider)
 
+//Below addresses are ropsten
 const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
 const irrigateInterestsAddress = '0xcFAe9CA007993F277943f318eB99334664162201'
 

@@ -2,9 +2,7 @@ const express = require('express')
 const path = require('path')
 const multer = require('multer')
 const mongoose = require('mongoose')
-
 const router = express.Router()
-
 const IrrigateCause = require('../models/irrigateCause')
 
 const storage = multer.diskStorage({
@@ -18,7 +16,7 @@ const storage = multer.diskStorage({
 
 const upload = multer ({ storage: storage }).single('file')
 
-//Routes
+//Send all the causes to the client
 router.get('/api', async (req, res) => {
 	let collection = await mongoose.connection.collection('causes')
 
@@ -28,6 +26,7 @@ router.get('/api', async (req, res) => {
 	})
 })
 
+//Save a cause in the database
 router.post('/save', function(req, res) {
 	upload(req, res, function(err) {
 		if (err instanceof multer.MulterError) {

@@ -5,6 +5,7 @@ const ropstenProvider = process.env.INFPROVIDER
 const provider = new HDWalletProvider(seed, ropstenProvider)
 const web3 = new Web3(provider)
 
+//All below adresses are ropsten
 const irrigateAddress = '0xC1f1B00Ca70bB54a4d2BC95d07f2647889E2331a'
 const irrigateInterestsAddress = '0xcFAe9CA007993F277943f318eB99334664162201'
 
@@ -35,7 +36,6 @@ module.exports = {
 		async function getLpCoreAddress() {
 			return await lpAddressProviderContract.methods.getLendingPoolCore().call()
 	    .catch((e) => {
-        // throw Error(`Error getting lendingPool address: ${e.message}`)
         console.log(`Error getting lendingPool address: ${e.message}`)
         console.log('Trying again')
 	  		lpCoreAddress()

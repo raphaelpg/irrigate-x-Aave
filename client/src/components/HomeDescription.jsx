@@ -7,7 +7,7 @@ class HomeDescription extends Component {
 			<div className="HomeDescription">
 				<div className="HomeDescriptionContainer">
 					<div className="HomeDescriptionLeft">
-		        <h2 className="HomeDescriptionLeftTitle">Browse projects by purpose or location</h2>
+		        <h2 className="HomeDescriptionLeftTitle">Browse and select projects by purpose</h2>
 	        </div>
 	        <div className="HomeDescriptionRight">
 		        <h2 className="HomeDescriptionRightTitle">View and manage your donations easily</h2>

@@ -15,8 +15,6 @@ const aaveFunctions = require('./functions/aaveFunctions')
 const causesFunctions = require('./functions/causesFunctions')
 const interestsFunctions = require('./functions/interestsFunctions')
 
-// const Batch = require('./models/batch')
-
 //Database connection
 const PORT = process.env.PORT || 8080
 const MONGO_URI = process.env.MONGO_URI
@@ -44,6 +42,10 @@ app.use('/user', userRoutes)
 app.use('/donations', donationsRoutes)
 
 //Function for batch time management, launched each 1st and 15th of every month at 00h01:
+//Redeem DAIs, perform transfers, deposit DAIs
+//A batch is an Object store in MongoDB database that contains all the projects addresses that have received funds and the corresponding
+//total funds they received during a period of 15 days.
+//For example June 2020 has two batch, A and B. Batch A named 2020_6_A from 1st to 14th and Batch B named 2020_6_B from 15th to 30th. 
 cron.schedule('1 0 1,15 * *', async () => {
 	//1.Create new batch to register causes donations
 		//get new batch name

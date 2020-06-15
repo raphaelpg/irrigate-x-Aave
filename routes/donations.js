@@ -21,6 +21,7 @@ const mockDaiContractAbi = require('../contracts/MockDAI.json')
 const mockDaiContractAddress = '0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'
 const mockDaiContractInstance = new web3.eth.Contract(mockDaiContractAbi, mockDaiContractAddress)
 
+//Return the name of the current batch  
 function getCurrentBatchName() {
 	let currentDate = new Date()
 	let currentYear = currentDate.getFullYear()
@@ -37,6 +38,7 @@ function getCurrentBatchName() {
 	}
 }
 
+//Save a donation to the batch
 router.post('/donateOnce', (req, res, next) => {
 	upload(req, res, async function(err) {
 		if (err instanceof multer.MulterError) {
@@ -80,7 +82,6 @@ router.post('/donateOnce', (req, res, next) => {
 				newData[0].causes[causeAddress] = receivedAmount.toString()
 				const myquery = { "batch": currentBatch }
 			  const newvalues = { $set: {"causes": newData[0].causes} }
-			  // updateOne({"_id" : ObjectId("0123456789abcdef01234567")}, {$set: { "my_test_key4" : 4}})
 			  collection.updateOne(myquery, newvalues, function(err, response) {
 			  	if (err) {
 						console.log(err)
@@ -98,6 +99,7 @@ router.post('/donateOnce', (req, res, next) => {
 	})
 })
 
+//Transfer DAI to cause
 router.post('/sendToCause', (req, res, next) => {
 	upload(req, res, async function(err) {
 		if (err instanceof multer.MulterError) {
