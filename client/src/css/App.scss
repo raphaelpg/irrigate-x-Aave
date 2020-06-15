@@ -260,7 +260,7 @@ $causeFontColor: #454545;
   min-height: 30px;
   max-height: 30px;
   background: darkgreen;
-  padding: 5px 30px 8px;
+  padding: 8px 30px 8px;
   border-radius: 15px;
   color: white;
   font-size: 14px;
@@ -432,4 +432,9 @@ $causeFontColor: #454545;
   font-weight: bolder;
   margin: auto auto;
   display: flex;
+}
+.githubLogo{
+  outline: none;
+  color: $irrigateFontColor;
+  text-decoration: none;
 }

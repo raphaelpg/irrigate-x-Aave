@@ -124,6 +124,33 @@ router.post('/updateStreamAmount', checkAuth, (req, res, next) => {
 	})
 })
 
+router.post('/saveCauses', checkAuth, (req, res, next) => {
+	upload(req, res, function(err) {
+		if (err instanceof multer.MulterError) {
+			return res.status(500).json(err)
+		} else if (err) {
+			return res.status(500).json(err)
+		}
+		console.log("req.body.userCausesId", req.body.userCausesId)
+		console.log("req.body.userCausesId typeof", typeof(req.body.userCausesId))
+		let userCausesIdArray = req.body.userCausesId.split(",")
+		
+		let collection = mongoose.connection.collection('users')
+		collection.updateOne({ email: req.body.email }, { $set: {subscribedCauses: userCausesIdArray } }, (err, result) => {
+			if (err) {
+				console.log(err)
+				res.status(500).json({
+					error: err
+				})
+			}
+			console.log("user causesId saved")
+			res.status(201).json({
+				message: 'User causesId updated'
+			})
+		})
+	})
+})
+
 router.delete('/:userId', (req, res, next) => {
 	let collection = mongoose.connection.collection('users')
 	collection.deleteOne({ _id: req.params.userId }, (err, result) => {
@@ -162,8 +189,6 @@ router.post('/causes', checkAuth, async (req, res) => {
 		} else if (err) {
 			return res.status(500).json(err)
 		}
-		console.log(req.body.causesId)
-		console.log(req.body.userEmail)
 
 		let reqCausesBuild = {$or: []}
 		let causesArray = req.body.causesId.split(",")

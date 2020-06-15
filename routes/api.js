@@ -39,6 +39,7 @@ router.post('/save', function(req, res) {
 		const newIrrigateCause = new IrrigateCause({
 			name: req.body.name,
 			description: req.body.description,
+			link: req.body.link,
 			category: req.body.category,
 			continent: req.body.continent,
 			country: req.body.country,

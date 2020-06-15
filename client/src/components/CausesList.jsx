@@ -81,12 +81,11 @@ class CausesList extends Component {
         <div className="causesListFilterContainer">
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >All</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Animal Protection</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Child Protection</p>
+          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Health</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Development</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Ecology</p>
+          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Environment</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Education</p>
           <p className="causesListFilterName" onClick={this.handleCategoryClick} >Human Rights</p>
-          <p className="causesListFilterName" onClick={this.handleCategoryClick} >Hunger Fight</p>
         </div>
         <div className="causesListContainer">
           {this.displayIrrigateCauses(this.props.causes)}

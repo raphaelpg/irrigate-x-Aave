@@ -7,6 +7,7 @@ class FormAddCause extends Component {
 		this.state = {
 			name: '',
 	    description: '',
+      link: '',
 	    category: '',
 	    continent: '',
 	    country: '',
@@ -37,6 +38,7 @@ class FormAddCause extends Component {
 
     payload.append('name', this.state.name)
     payload.append('description', this.state.description)
+    payload.append('link', this.state.link)
     payload.append('category', this.state.category)
     payload.append('continent', this.state.continent)
     payload.append('country', this.state.country)
@@ -58,6 +60,7 @@ class FormAddCause extends Component {
     this.setState({
       name: '',
       description: '',
+      link: '',
       category: '',
       continent: '',
       country: '',
@@ -94,6 +97,15 @@ class FormAddCause extends Component {
               onChange={this.handleChange} 
             >
             </textarea>
+          </div>
+          <label>Link</label>
+          <div className="form-input">
+            <input 
+              name="link" 
+              type="text" 
+              value={this.state.link} 
+              onChange={this.handleChange} 
+            />
           </div>
           <label>Category</label>
           <div className="form-input">

@@ -73,7 +73,29 @@ class App extends React.Component {
   }
 
   async saveUserCauses() {
+    try {
+      if (sessionStorage.getItem('userAuth') === 'true') {
+        const userEmail = sessionStorage.getItem('userEmail')
+        const userToken = sessionStorage.getItem('userToken')
 
+        const payload = new FormData()
+        payload.append('email', userEmail)
+        payload.append('userCausesId', this.state.userCausesId)
+        console.log(this.state.userCausesId)
+        let config = {
+          headers: {
+            Authorization: 'Bearer ' + userToken
+          }
+        }
+
+        axios.post('/user/saveCauses', payload, config)
+          .catch(() => {
+            console.log('Error sending user causes list')
+          })
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   async getUserData() {
@@ -113,6 +135,7 @@ class App extends React.Component {
 
   addCauseToUserList = ({ target }) => {
     this.state.userCausesId.push(target.name)
+    this.saveUserCauses()
     this.getUserCauses()
   }
 
@@ -121,6 +144,7 @@ class App extends React.Component {
     if (causeIndex > -1) {
       this.state.userCausesId.splice(causeIndex, 1);
     }
+    this.saveUserCauses()
     this.getUserCauses()
   }
 
