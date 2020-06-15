@@ -4,6 +4,7 @@ NGOs and associations can submit a form to the app and be viewed in the main pag
 Donors can register and see all the NGOs and associations available for donations.  
 
 The project has been built during SOS Hackathon in June 2020.  
+Presentation can be found [here](https://docs.google.com/presentation/d/1Tvb5E9A6eEexZ1a7a1ZowvF8ps70dvDOYdWD1HJts30/edit?usp=sharing)  
 It's still a Proof of Concept, so security checks have to be performed.  
 Also, all the informations contained such as NGO's name and description are used for the hackathon purpose only.   
 
