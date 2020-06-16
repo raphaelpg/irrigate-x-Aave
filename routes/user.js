@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const upload = multer ({  }).single('file')
 const checkAuth = require('../middleware/check-auth')
+const util = require('util')
 require('dotenv').config()
 
 //Create user
@@ -135,23 +136,53 @@ router.post('/saveCauses', checkAuth, (req, res, next) => {
 		} else if (err) {
 			return res.status(500).json(err)
 		}
-		console.log("req.body.userCausesId", req.body.userCausesId)
-		console.log("req.body.userCausesId typeof", typeof(req.body.userCausesId))
-		let userCausesIdArray = req.body.userCausesId.split(",")
-		
-		let collection = mongoose.connection.collection('users')
-		collection.updateOne({ email: req.body.email }, { $set: {subscribedCauses: userCausesIdArray } }, (err, result) => {
-			if (err) {
-				console.log(err)
-				res.status(500).json({
-					error: err
+		if (req.body.userCausesId.indexOf(',') > -1) {
+			let userCausesIdArray = req.body.userCausesId.split(",")
+			let collection = mongoose.connection.collection('users')
+			collection.updateOne({ email: req.body.email }, { $set: {subscribedCauses: userCausesIdArray } }, (err, result) => {
+				if (err) {
+					console.log(err)
+					res.status(500).json({
+						error: err
+					})
+				}
+				console.log("user causesId saved")
+				res.status(201).json({
+					message: 'User causesId updated'
 				})
-			}
-			console.log("user causesId saved")
-			res.status(201).json({
-				message: 'User causesId updated'
 			})
-		})
+		} else if (req.body.userCausesId !== '') {
+			let userCausesIdArray = [] 
+			userCausesIdArray.push(req.body.userCausesId)
+			let collection = mongoose.connection.collection('users')
+			collection.updateOne({ email: req.body.email }, { $set: {subscribedCauses: userCausesIdArray } }, (err, result) => {
+				if (err) {
+					console.log(err)
+					res.status(500).json({
+						error: err
+					})
+				}
+				console.log("user causesId saved")
+				res.status(201).json({
+					message: 'User causesId updated'
+				})
+			})
+		} else if (req.body.userCausesId === '') {
+			let userCausesIdArray = [] 
+			let collection = mongoose.connection.collection('users')
+			collection.updateOne({ email: req.body.email }, { $set: {subscribedCauses: userCausesIdArray } }, (err, result) => {
+				if (err) {
+					console.log(err)
+					res.status(500).json({
+						error: err
+					})
+				}
+				console.log("user causesId saved")
+				res.status(201).json({
+					message: 'User causesId updated'
+				})
+			})
+		}
 	})
 })
 
@@ -192,23 +223,35 @@ router.post('/data', checkAuth, (req, res, next) => {
 router.post('/causes', checkAuth, async (req, res) => {
 	upload(req, res, function(err) {
 		if (err instanceof multer.MulterError) {
+			console.log("error here")
 			return res.status(500).json(err)
 		} else if (err) {
+			console.log("error here")
 			return res.status(500).json(err)
 		}
-
-		let reqCausesBuild = {$or: []}
-		let causesArray = req.body.causesId.split(",")
-		for (let i=0; i<causesArray.length; i++){
-			let inputId = mongoose.Types.ObjectId(causesArray[i])
-			reqCausesBuild.$or.push({"_id": inputId})
+		if (req.body.causesId.indexOf(",") > -1) {
+			let reqCausesBuild = {$or: []}
+			let causesArray = req.body.causesId.split(",")
+			for (let i=0; i<causesArray.length; i++){
+				let inputId = mongoose.Types.ObjectId(causesArray[i])
+				reqCausesBuild.$or.push({"_id": inputId})
+			}
+			let causesCollection = mongoose.connection.collection('causes')
+			causesCollection.find( reqCausesBuild ).toArray((err, data) => {
+				if (err) throw err
+				res.json(data)
+			})
+		} else if(req.body.causesId.indexOf('none') > -1) {
+			res.json('')
+		} else  {
+			let inputId = mongoose.Types.ObjectId(req.body.causesId)
+			
+			let causesCollection = mongoose.connection.collection('causes')
+			causesCollection.find({ _id: inputId }).toArray((err, data) => {
+				if (err) throw err
+				res.json(data)
+			})
 		}
-
-		let causesCollection = mongoose.connection.collection('causes')
-		causesCollection.find( reqCausesBuild ).toArray((err, data) => {
-			if (err) throw err
-			res.json(data)
-		})
 	})
 })
 

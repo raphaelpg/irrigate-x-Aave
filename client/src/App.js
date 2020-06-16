@@ -57,7 +57,6 @@ class App extends React.Component {
   }
 
   checkSessionStorage = async () => {
-    console.log('checkSessionStorage started')
     try {
         const sessionUserAuth = await sessionStorage.getItem('userAuth')
         const sessionUserToken = await sessionStorage.getItem('userToken')
@@ -152,7 +151,11 @@ class App extends React.Component {
     try {
       const payload = new FormData()
       const userToken = sessionStorage.getItem('userToken')
-      payload.append('causesId', this.state.userCausesId)
+      if (this.state.userCausesId.length < 1) {
+        payload.append('causesId', 'none')
+      } else {
+        payload.append('causesId', this.state.userCausesId)
+      }
       payload.append('userEmail', sessionStorage.getItem('userEmail'))
 
       let config = {
@@ -163,7 +166,6 @@ class App extends React.Component {
 
       axios.post('/user/causes', payload, config)
         .then((response) => {
-          console.log(response.data)
           const data = response.data
           this.setState({ userCauses: data })
         })
