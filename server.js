@@ -99,5 +99,10 @@ cron.schedule('1 1 1 * *', async () => {
 
 })
 
+//Heroku check
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static('client/build'))
+}
+
 //Start server
 app.listen(PORT, console.log(`Server listening on ${PORT}`))
