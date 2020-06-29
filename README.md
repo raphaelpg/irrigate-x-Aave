@@ -6,7 +6,8 @@ Donors can register and see all the NGOs and associations available for donation
 The project has been built during and for the SOS Hackathon in June 2020.  
 Presentation can be found [here](https://docs.google.com/presentation/d/1Tvb5E9A6eEexZ1a7a1ZowvF8ps70dvDOYdWD1HJts30/edit?usp=sharing)  
 It's still in a proof of concept state, so security checks have to be performed.  
-Also, all the informations contained such as NGO's names and descriptions are used for the hackathon purpose only.   
+Also, all the informations contained such as NGO's names and descriptions are used for the hackathon purpose only.  
+It is deployed on Heroku for tests at [https://irrigateheroku.herokuapp.com/](https://irrigateheroku.herokuapp.com/)  
 
 
 ## NGOs and associations interactions with the app  
