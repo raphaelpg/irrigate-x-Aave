@@ -27,6 +27,10 @@ $causeFontColor: #454545;
   justify-content: space-between;
   background: $irrigateBackground;
   color: $irrigateFontColor;
+  border: 0 transparent;
+  border-bottom: 3px solid;
+  border-image-source: linear-gradient(0deg,orange,darkgreen);
+  border-image-slice: 1;
 }
 .NavbarLeftCorner{
   display: flex;
@@ -153,7 +157,10 @@ $causeFontColor: #454545;
   background: burlywood;
   color: darkgreen;
   font-size: larger;
-  border-bottom: 12px solid lightgrey;
+  border: 0 transparent;
+  border-bottom: 5px solid;
+  border-image-source: linear-gradient(145deg,green,orange);
+  border-image-slice: 1;
 }
 .HomeDescriptionContainer{
   width: 80%;
@@ -441,6 +448,10 @@ $causeFontColor: #454545;
   background: $irrigateBackground;
   color: $irrigateFontColor;
   font-size: larger;
+  border: 0 transparent;
+  border-top: 3px solid;
+  border-image-source: linear-gradient(180deg,orange,darkgreen);
+  border-image-slice: 1;
 }
 .FooterContainer{
   display: flex;
