@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import Zoom from 'react-reveal/Zoom'
 
 class FormLogIn extends Component {
 	constructor(props){
@@ -46,34 +47,36 @@ class FormLogIn extends Component {
 	render() {
 		
     let FormLogIn = (
-      <div className="FormAddUser">
-        <div className="FormAddUserTitle_Close">
-          <p className="FormAddUserTitle">Login: </p>
-          <button className="closeFormAddUserButton" onClick={this.props.closeFormLogIn}>x</button>
-  			</div>
-        <form onSubmit={this.logUser} >
-          <label>Email</label>
-          <div className="form-input">
-            <input 
-              name="email" 
-              type="text" 
-              value={this.state.email} 
-              onChange={this.handleChange} 
-            />
-          </div>
-          <label>Password</label>
-          <div className="form-input">
-            <input 
-              name="password" 
-              type="password" 
-              value={this.state.password} 
-              onChange={this.handleChange} 
-            />
-          </div>
-          <button className="FormAddCauseButton">Login</button>
-        </form>
-      </div>
-		)
+      <Zoom duration={300}>
+        <div className="FormAddUser">
+          <div className="FormAddUserTitle_Close">
+            <p className="FormAddUserTitle">Login: </p>
+            <button className="closeFormAddUserButton" onClick={this.props.closeFormLogIn}>x</button>
+    			</div>
+          <form onSubmit={this.logUser} >
+            <label>Email</label>
+            <div className="form-input">
+              <input 
+                name="email" 
+                type="text" 
+                value={this.state.email} 
+                onChange={this.handleChange} 
+              />
+            </div>
+            <label>Password</label>
+            <div className="form-input">
+              <input 
+                name="password" 
+                type="password" 
+                value={this.state.password} 
+                onChange={this.handleChange} 
+              />
+            </div>
+            <button className="FormAddCauseButton">Login</button>
+          </form>
+        </div>
+		  </Zoom>
+    )
 
     if (! this.props.displayFormLogIn) {
       FormLogIn = null;

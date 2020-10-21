@@ -1,5 +1,5 @@
 import React from 'react'
-import getWeb3 from './utils/getWeb3';
+import getWeb3 from './utils/getWeb3'
 import axios from 'axios'
 import './css/App.scss'
 import MockDAI from './contracts/MockDAI.json'
@@ -233,7 +233,6 @@ class App extends React.Component {
           <div className="NavbarRightCorner">
             {FormAddUserButton}
             {FormUserConnected}
-
             <FormAddUser 
               displayFormAddUser={ this.state.displayFormAddUser } 
               closeFormAddUser={(e) => this.setState({ displayFormAddUser:false })}

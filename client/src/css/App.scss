@@ -86,14 +86,14 @@ $causeFontColor: #454545;
   cursor: pointer;
 }
 .FormAddUser{
-  position: absolute;
+  position: fixed;
   background: white;
   width: 400px;
   margin: 0;
   padding: 0px 20px 20px 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 20px;
+  left: 35%;
+  /*transform: translateX(-50%);*/
+  top: 20%;
   border: 1px solid $irrigateBackground;
   border-radius: 15px;
   z-index: 9999;
@@ -198,9 +198,9 @@ $causeFontColor: #454545;
   width: 700px;
   margin: 0;
   padding: 0 0 20px 0;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 20px;
+  left: 25%;
+  /*transform: translateX(-50%);*/
+  top: 10%;
   border: 1px solid $irrigateBackground;
   border-radius: 15px;
   z-index: 9999;
