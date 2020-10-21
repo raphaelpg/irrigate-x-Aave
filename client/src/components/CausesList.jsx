@@ -63,7 +63,9 @@ class CausesList extends Component {
   }
 
   handleCategoryClick = ({ target }) => {
-    if (target.innerHTML) {
+    if (target.title) {
+      this.setState({ filter: target.title})
+    } else if (target.innerHTML) {
       this.setState({ filter: target.innerHTML})
     } else {
       this.setState({ filter: target.name})
@@ -77,27 +79,27 @@ class CausesList extends Component {
           <div className="filterAndLogoContainer">
             <p className="causesListFilterName" onClick={this.handleCategoryClick} >All</p>
           </div>
-          <div className="filterAndLogoContainer"  onClick={this.handleCategoryClick} >
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Animal Protection">
             <img className="causeFilterLogo" name="Animal Protection" src={animal} alt="animal logo"></img>
             <p className="causesListFilterName" >Animal Protection</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Health">
             <img className="causeFilterLogo" name="Health" src={health} alt="health logo"></img>
             <p className="causesListFilterName" >Health</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Development">
             <img className="causeFilterLogo" name="Development" src={development} alt="development logo"></img>
             <p className="causesListFilterName" >Development</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Environment">
             <img className="causeFilterLogo" name="Environment" src={environment} alt="environment logo"></img>
             <p className="causesListFilterName" >Environment</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Education">
             <img className="causeFilterLogo" name="Education" src={education} alt="education logo"></img>
             <p className="causesListFilterName" >Education</p>
           </div>
-          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} >
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Human Rights">
             <img className="causeFilterLogo" name="Human Rights" src={human_rights} alt="human_rights logo"></img>
             <p className="causesListFilterName" >Human Rights</p>
           </div>

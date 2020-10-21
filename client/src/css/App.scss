@@ -11,7 +11,8 @@ $causeListWidth: 1110px;
 $causeFontColor: #454545;
 
 .app {
-  font-family: 'Muli-Regular', sans-serif;
+  /*font-family: 'Muli-Regular', sans-serif;*/
+  font-family: 'Roboto', sans-serif;
   padding: 0px;
 }
 
@@ -346,14 +347,10 @@ $causeFontColor: #454545;
   font-weight: bold;
   border-bottom: 1px solid grey;
 }
-.causesListFilterName:hover{
-  color: $irrigateBackground;
-  font-weight: bold;
-  cursor: pointer;
-}
 .filterAndLogoContainer{
   display: flex;
   flex-direction: row;
+  cursor: pointer;
   -webkit-transition: .2s ease-in-out;
   transition: .2s ease-in-out;
 }
@@ -365,6 +362,11 @@ $causeFontColor: #454545;
   width: 40px;
   height: 40px;
   margin: auto 5px auto 0px;
+  cursor: pointer;
+}
+.causesListFilterName:hover{
+  color: $irrigateBackground;
+  font-weight: bold;
   cursor: pointer;
 }
 .causesListContainer{
