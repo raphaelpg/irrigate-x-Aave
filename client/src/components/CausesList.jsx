@@ -12,19 +12,21 @@ const asia = require('./asia.png')
 const europe = require('./europe.png')
 const oceania = require('./oceania.png')
 const poles = require('./iceberg.png')
+const planet = require('./planet.png')
+const globe = require('./globe.png')
 
 class CausesList extends Component {
   constructor(props){
     super(props);
     this.state = {
       category_filter: 'All',
-      location_filter: 'Worldwide'
+      location_filter: 'Anywhere'
     };
   }
 
   displayIrrigateCauses = (causes) => {
     if (!causes) return null
-    if (this.state.category_filter === 'All' && this.state.location_filter === 'Worldwide') {
+    if (this.state.category_filter === 'All' && this.state.location_filter === 'Anywhere') {
       return causes.map( (cause, index) => (
         <Fade duration={1000} key={index}>
           <div className="causeDisplay">
@@ -44,10 +46,54 @@ class CausesList extends Component {
         </Fade>
       ))
     }
-    else {
+    else if (this.state.category_filter === 'All' && this.state.location_filter !== 'Anywhere') {
       let result = causes.filter(cause => {
-        return cause.category === this.state.category_filter
-      })  
+        return (cause.continent === this.state.location_filter || cause.continent === 'Worldwide')
+      })
+      return result.map( (cause, index) => (
+        <Fade duration={1000} key={index}>
+          <div className="causeDisplay">
+            <div className="causeLogoContainer">
+              <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+            </div>
+            <h3>{cause.name}</h3>
+            <p>{cause.category}</p>
+            <p>Activity's location: {cause.continent}, {cause.country}</p>
+            <p>{cause.description}</p>
+            <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
+            <p className="causeNumber">Monthly donors: 2000 persons</p>
+            <p className="causeNumber">Monthly donations: 1500 DAI</p>
+            <p className="causeNumber">Total funds raised: 23500 DAI</p>
+            <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
+          </div>
+        </Fade>
+      ))  
+    }
+    else if (this.state.category_filter !== 'All' && this.state.location_filter === 'Anywhere') {
+      let result = causes.filter(cause => {
+        return (cause.category === this.state.category_filter)
+      })
+      return result.map( (cause, index) => (
+        <Fade duration={1000} key={index}>
+          <div className="causeDisplay">
+            <div className="causeLogoContainer">
+              <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+            </div>
+            <h3>{cause.name}</h3>
+            <p>{cause.category}</p>
+            <p>Activity's location: {cause.continent}, {cause.country}</p>
+            <p>{cause.description}</p>
+            <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
+            <p className="causeNumber">Monthly donors: 2000 persons</p>
+            <p className="causeNumber">Monthly donations: 1500 DAI</p>
+            <p className="causeNumber">Total funds raised: 23500 DAI</p>
+            <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
+          </div>
+        </Fade>
+      ))  
+    }
+    else if (this.state.category_filter !== 'All' && this.state.location_filter !== 'Anywhere') {
+      let result = causes.filter(cause => cause.category === this.state.category_filter && (cause.continent === this.state.location_filter || cause.continent === 'Worldwide'))
       return result.map( (cause, index) => (
         <Fade duration={1000} key={index}>
           <div className="causeDisplay">
@@ -99,8 +145,12 @@ class CausesList extends Component {
 		return (
 			<div className="irrigateCausesList">
         <div className="causesListFilterContainer">
-          <div className="filterAndLogoContainer">
-            <p className="causesListFilterName" onClick={this.handleCategoryClick} >All</p>
+          <div className="filterTitleContainer">
+            <p className="causesListFilterTitle">Category:</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="All">
+            <img className="causeFilterLogo" name="All" src={planet} alt="earth logo"></img>
+            <p className="causesListFilterName" >All</p>
           </div>
           <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Animal Protection">
             <img className="causeFilterLogo" name="Animal Protection" src={animal} alt="animal logo"></img>
@@ -128,8 +178,12 @@ class CausesList extends Component {
           </div>
         </div>
         <div className="causesListFilterContainer">
-          <div className="filterAndLogoContainer">
-            <p className="causesListFilterName" onClick={this.handleLocationClick} >Worldwide</p>
+          <div className="filterTitleContainer">
+            <p className="causesListFilterTitle">Location:</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Anywhere">
+            <img className="causeFilterLogo" name="Anywhere" src={globe} alt="globe logo"></img>
+            <p className="causesListFilterName" >Anywhere</p>
           </div>
           <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Africa">
             <img className="causeFilterLogo" name="Africa" src={africa} alt="africa continent logo"></img>

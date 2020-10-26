@@ -350,7 +350,7 @@ $causeFontColor: #454545;
   flex-direction: row;
   justify-content: space-between;
   width: $causeListWidth;
-  margin: auto;
+  margin: 0 auto 20px auto;
   font-weight: bold;
   border-bottom: 1px solid grey;
 }
@@ -364,12 +364,18 @@ $causeFontColor: #454545;
 .filterAndLogoContainer:hover{
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+  color: $irrigateBackground;
 }
 .causeFilterLogo{
   width: 40px;
   height: 40px;
   margin: auto 5px auto 0px;
   cursor: pointer;
+}
+.causesListFilterTitle{
+  color: $irrigateBackground;
+  font-weight: bold;
+  cursor: default;
 }
 .causesListFilterName:hover{
   color: $irrigateBackground;
