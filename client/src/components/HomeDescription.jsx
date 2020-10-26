@@ -13,7 +13,7 @@ class HomeDescription extends Component {
 						</Fade>
 	        </div>
 	        <div className="HomeDescriptionRight">
-						<Fade right duration={2000}>
+						<Fade bottom duration={2000}>
 		        	<h2 className="HomeDescriptionRightTitle">View and manage your donations easily</h2>
 						</Fade>
 	      	</div>

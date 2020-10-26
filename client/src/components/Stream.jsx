@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios'
+import Zoom from 'react-reveal/Zoom'
+import axios from 'axios';
 import getWeb3 from '../utils/getWeb3';
 
 class Stream extends Component {
@@ -90,51 +91,53 @@ class Stream extends Component {
 	render() {
 
     let Stream = (
-      <div className="Stream">
-        <div className="StreamTitle_Close">
-          <p className="StreamTitle">Your current stream:</p>
-          <button className="closeFormAddCauseButton" onClick={this.props.closeStream}>x</button>
-        </div>
-        <div>Your supported causes:</div>
-        <div className="userCausesContainer">
-          {this.displayUserCauses(this.props.userCauses)}
-        </div>
+      <Zoom duration={300}>
+        <div className="Stream"> 
+          <div className="StreamTitle_Close">
+            <p className="StreamTitle">Your current stream:</p>
+            <button className="closeFormAddCauseButton" onClick={this.props.closeStream}>x</button>
+          </div>
+          <div>Your supported causes:</div>
+          <div className="userCausesContainer">
+            {this.displayUserCauses(this.props.userCauses)}
+          </div>
 
-        <div className="donateOnceContainer">
-          <form className="donateOnceForm" onSubmit={this.donateOnce} >
-            <label>Donation value: </label>
-            <div className="form-input">
-              <input 
-                name="donateOnceAmount" 
-                type="number" 
-                min="5"
-                step="5"
-                placeholder="0"
-                onChange={this.handleChange} 
-              /> DAI
-            </div>
-            <button className="FormAddCauseButton">Donate once</button>
-          </form>
-        </div>
+          <div className="donateOnceContainer">
+            <form className="donateOnceForm" onSubmit={this.donateOnce} >
+              <label>Donation value: </label>
+              <div className="form-input">
+                <input 
+                  name="donateOnceAmount" 
+                  type="number" 
+                  min="5"
+                  step="5"
+                  placeholder="0"
+                  onChange={this.handleChange} 
+                /> DAI
+              </div>
+              <button className="FormAddCauseButton">Donate once</button>
+            </form>
+          </div>
 
-        <div>
-          <p className="">Your current stream: {this.props.currentStreamAmount} DAI / month</p>
-          <form className="setStreamForm" onSubmit={this.setStreamAmount} >
-            <label>Set monthly donation to: </label>
-            <div className="form-input">
-              <input 
-                name="newStreamAmount" 
-                type="number" 
-                min="0"
-                step="5"
-                placeholder="5"
-                onChange={this.handleChange} 
-              /> DAI
-            </div>
-            <button className="FormAddCauseButton">Set amount</button>
-          </form>
+          <div>
+            <p className="">Your current stream: {this.props.currentStreamAmount} DAI / month</p>
+            <form className="setStreamForm" onSubmit={this.setStreamAmount} >
+              <label>Set monthly donation to: </label>
+              <div className="form-input">
+                <input 
+                  name="newStreamAmount" 
+                  type="number" 
+                  min="0"
+                  step="5"
+                  placeholder="5"
+                  onChange={this.handleChange} 
+                /> DAI
+              </div>
+              <button className="FormAddCauseButton">Set amount</button>
+            </form>
+          </div>
         </div>
-      </div>
+      </Zoom>
 		)
 
     if (! this.props.displayStream) {

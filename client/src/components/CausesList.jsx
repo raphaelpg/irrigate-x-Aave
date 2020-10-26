@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Fade from 'react-reveal/Fade'
 const animal = require('./animal.png')
 const development = require('./development.png')
 const education = require('./education.png')
@@ -18,20 +19,22 @@ class CausesList extends Component {
     if (!causes) return null
     if (this.state.filter === 'All') {
       return causes.map( (cause, index) => (
-        <div className="causeDisplay" key={index}>
-          <div className="causeLogoContainer">
-            <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+        <Fade duration={1000}>
+          <div className="causeDisplay" key={index}>
+            <div className="causeLogoContainer">
+              <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+            </div>
+            <h3>{cause.name}</h3>
+            <p>{cause.category}</p>
+            <p>Activity's location: {cause.continent}, {cause.country}</p>
+            <p>{cause.description}</p>
+            <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
+            <p className="causeNumber">Monthly donors: 2000 persons</p>
+            <p className="causeNumber">Monthly donations: 1500 DAI</p>
+            <p className="causeNumber">Total funds raised: 23500 DAI</p>
+            <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
           </div>
-          <h3>{cause.name}</h3>
-          <p>{cause.category}</p>
-          <p>Activity's location: {cause.continent}, {cause.country}</p>
-          <p>{cause.description}</p>
-          <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
-          <p className="causeNumber">Monthly donors: 2000 persons</p>
-          <p className="causeNumber">Monthly donations: 1500 DAI</p>
-          <p className="causeNumber">Total funds raised: 23500 DAI</p>
-          <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
-        </div>
+        </Fade>
       ))
     }
     else {

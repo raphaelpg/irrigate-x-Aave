@@ -279,13 +279,13 @@ $causeFontColor: #454545;
 }
 
 .Stream{
-  position: absolute;
+  position: fixed;
   background: white;
   width: 700px;
   margin: 0;
   padding: 15px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 25%;
+  /*transform: translateX(-50%);*/
   top: 20px;
   border: 1px solid $irrigateBackground;
   border-radius: 15px;
@@ -378,6 +378,7 @@ $causeFontColor: #454545;
 }
 .causesListContainer{
   width: $causeListWidth;
+  min-height: 100vh;
   margin: 20px auto;
   display: flex;
   flex-direction: row;
