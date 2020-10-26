@@ -6,21 +6,28 @@ const education = require('./education.png')
 const environment = require('./environment.png')
 const health = require('./health.png')
 const human_rights = require('./human_rights.png')
+const america = require('./america.png')
+const africa = require('./africa.png')
+const asia = require('./asia.png')
+const europe = require('./europe.png')
+const oceania = require('./oceania.png')
+const poles = require('./iceberg.png')
 
 class CausesList extends Component {
   constructor(props){
     super(props);
     this.state = {
-      filter: 'All'
+      category_filter: 'All',
+      location_filter: 'Worldwide'
     };
   }
 
   displayIrrigateCauses = (causes) => {
     if (!causes) return null
-    if (this.state.filter === 'All') {
+    if (this.state.category_filter === 'All' && this.state.location_filter === 'Worldwide') {
       return causes.map( (cause, index) => (
-        <Fade duration={1000}>
-          <div className="causeDisplay" key={index}>
+        <Fade duration={1000} key={index}>
+          <div className="causeDisplay">
             <div className="causeLogoContainer">
               <img className="causeLogo" src={cause.logoName} alt={cause.name} />
             </div>
@@ -39,23 +46,25 @@ class CausesList extends Component {
     }
     else {
       let result = causes.filter(cause => {
-        return cause.category === this.state.filter
+        return cause.category === this.state.category_filter
       })  
       return result.map( (cause, index) => (
-        <div className="causeDisplay" key={index}>
-          <div className="causeLogoContainer">
-            <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+        <Fade duration={1000} key={index}>
+          <div className="causeDisplay">
+            <div className="causeLogoContainer">
+              <img className="causeLogo" src={cause.logoName} alt={cause.name} />
+            </div>
+            <h3>{cause.name}</h3>
+            <p>{cause.category}</p>
+            <p>Activity's location: {cause.continent}, {cause.country}</p>
+            <p>{cause.description}</p>
+            <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
+            <p className="causeNumber">Monthly donors: 2000 persons</p>
+            <p className="causeNumber">Monthly donations: 1500 DAI</p>
+            <p className="causeNumber">Total funds raised: 23500 DAI</p>
+            <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
           </div>
-          <h3>{cause.name}</h3>
-          <p>{cause.category}</p>
-          <p>Activity's location: {cause.continent}, {cause.country}</p>
-          <p>{cause.description}</p>
-          <a href={cause.link} target="_blank" rel="noopener noreferrer">{cause.link}</a>
-          <p className="causeNumber">Monthly donors: 2000 persons</p>
-          <p className="causeNumber">Monthly donations: 1500 DAI</p>
-          <p className="causeNumber">Total funds raised: 23500 DAI</p>
-          <button className="addCauseToYourListButton" name={cause._id} onClick={this.props.addCauseToUserList} >Add cause to your donation stream</button>
-        </div>
+        </Fade>
       ))  
     }
   }
@@ -67,15 +76,26 @@ class CausesList extends Component {
 
   handleCategoryClick = ({ target }) => {
     if (target.title) {
-      this.setState({ filter: target.title})
+      this.setState({ category_filter: target.title})
     } else if (target.innerHTML) {
-      this.setState({ filter: target.innerHTML})
+      this.setState({ category_filter: target.innerHTML})
     } else {
-      this.setState({ filter: target.name})
+      this.setState({ category_filter: target.name})
+    }
+  }
+
+  handleLocationClick = ({ target }) => {
+    if (target.title) {
+      this.setState({ location_filter: target.title})
+    } else if (target.innerHTML) {
+      this.setState({ location_filter: target.innerHTML})
+    } else {
+      this.setState({ location_filter: target.name})
     }
   }
 
 	render() {
+    console.log(this.state)
 		return (
 			<div className="irrigateCausesList">
         <div className="causesListFilterContainer">
@@ -105,6 +125,35 @@ class CausesList extends Component {
           <div className="filterAndLogoContainer" onClick={this.handleCategoryClick} title="Human Rights">
             <img className="causeFilterLogo" name="Human Rights" src={human_rights} alt="human_rights logo"></img>
             <p className="causesListFilterName" >Human Rights</p>
+          </div>
+        </div>
+        <div className="causesListFilterContainer">
+          <div className="filterAndLogoContainer">
+            <p className="causesListFilterName" onClick={this.handleLocationClick} >Worldwide</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Africa">
+            <img className="causeFilterLogo" name="Africa" src={africa} alt="africa continent logo"></img>
+            <p className="causesListFilterName" >Africa</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="America">
+            <img className="causeFilterLogo" name="America" src={america} alt="america continent logo"></img>
+            <p className="causesListFilterName" >America</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Asia">
+            <img className="causeFilterLogo" name="Asia" src={asia} alt="asia continent logo"></img>
+            <p className="causesListFilterName" >Asia</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Europe">
+            <img className="causeFilterLogo" name="Europe" src={europe} alt="europe continent logo"></img>
+            <p className="causesListFilterName" >Europe</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Oceania">
+            <img className="causeFilterLogo" name="Oceania" src={oceania} alt="oceania continent logo"></img>
+            <p className="causesListFilterName" >Oceania</p>
+          </div>
+          <div className="filterAndLogoContainer" onClick={this.handleLocationClick} title="Poles">
+            <img className="causeFilterLogo" name="Poles" src={poles} alt="iceberg logo representing north and south poles"></img>
+            <p className="causesListFilterName" >Poles</p>
           </div>
         </div>
         <div className="causesListContainer">
